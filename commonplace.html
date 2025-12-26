@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Salim Oyinlola - The Commonplace</title>
+    <title>Salim Oyinlola - The Registry</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300;400;600;700&display=swap" rel="stylesheet" />
@@ -16,7 +16,6 @@
             line-height: 1.6;
         }
 
-        /* Header Style */
         .site-header { 
             background: white; 
             padding: 1rem 0; 
@@ -27,9 +26,9 @@
         }
 
         .container { 
-            max-width: 1200px; 
+            max-width: 1100px; 
             margin: 0 auto; 
-            padding: 0 1.5rem; /* Standard mobile padding */
+            padding: 0 1.5rem; 
         }
 
         .flex-wrap { 
@@ -41,115 +40,107 @@
 
         .logo a { color: #0a5d80; text-decoration: none; font-weight: 700; font-size: 1.5rem; }
         .navbar { display: flex; list-style: none; gap: 20px; }
-        .navbar a { text-decoration: none; color: #0c5ebc; font-weight: 600; transition: 0.3s; }
-        .navbar a:hover { color: #764ba2; }
+        .navbar a { text-decoration: none; color: #0c5ebc; font-weight: 600; }
 
-        /* Page Layout */
         .page-title-area {
             text-align: center;
-            padding: 3rem 1rem 1rem 1rem;
+            padding: 4rem 1rem 2rem 1rem;
         }
         
-        .page-title-area h1 { color: #0a5d80; margin-bottom: 0.5rem; }
-        .page-title-area p { color: #666; font-size: 0.9rem; }
+        .page-title-area h1 { 
+            color: #0a5d80; 
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem; 
+            letter-spacing: -1px;
+        }
+        
+        .page-title-area p { color: #666; font-size: 1rem; }
 
+        /* Two Column Grid */
         .hub-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-            gap: 2rem; 
-            margin: 2rem 0 4rem 0;
+            grid-template-columns: 1fr 1.2fr; 
+            gap: 2.5rem; 
+            margin: 2rem 0 5rem 0;
         }
 
         .hub-section { 
             background: white; 
-            border-radius: 15px; 
-            padding: 2rem; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
-        }
-        
-        .hub-section:hover {
-            transform: translateY(-5px);
+            border-radius: 20px; 
+            padding: 2.5rem; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            height: fit-content;
         }
 
         .hub-section h2 { 
             color: #0a5d80; 
-            margin-bottom: 1.5rem; 
-            font-size: 1.4rem;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 0.5rem;
+            margin-bottom: 2rem; 
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        /* Blog Items */
-        .blog-post { 
-            margin-bottom: 1.5rem; 
-            padding-bottom: 1rem; 
-            border-bottom: 1px solid #f9f9f9;
-        }
-        
-        .blog-post:last-child { border-bottom: none; }
-        
-        .blog-img { 
-            width: 100%; 
-            height: 140px; 
-            background: #eee; 
-            border-radius: 8px; 
-            margin-bottom: 10px; 
-            object-fit: cover; 
-            display: block;
-        }
-
-        .blog-post h4 { margin: 0.5rem 0; font-size: 1rem; line-height: 1.3; }
-        .read-more-link { font-weight: 700; color: #764ba2; text-decoration: none; font-size: 0.8rem; }
-        
-        /* Books Styling */
-        .book-cat { margin-bottom: 1.5rem; }
+        /* Reading List Styles */
+        .book-cat { margin-bottom: 2rem; }
         .book-cat h3 { 
             font-size: 0.85rem; 
             color: #764ba2; 
-            margin-bottom: 8px; 
+            margin-bottom: 12px; 
             text-transform: uppercase; 
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            border-left: 3px solid #764ba2;
+            padding-left: 10px;
         }
         
         .book-list { list-style: none; }
         .book-list li {
-            font-size: 0.9rem;
-            padding: 4px 0;
-            color: #444;
-            display: flex;
-            align-items: flex-start;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            color: #333;
+            border-bottom: 1px solid #f0f0f0;
         }
-        
-        .book-list li::before {
-            content: "•";
-            color: #764ba2;
-            font-weight: bold;
-            display: inline-block; 
-            width: 1em;
-            margin-left: 0;
-        }
+        .book-list li:last-child { border-bottom: none; }
 
         .recommend-btn { 
             display: block; 
-            margin-top: 2rem; 
+            margin-top: 1rem; 
             background: #0c5ebc; 
             color: white; 
             text-align: center; 
-            padding: 12px; 
-            border-radius: 8px; 
+            padding: 14px; 
+            border-radius: 10px; 
             text-decoration: none; 
-            font-weight: 600;
-            transition: 0.3s;
+            font-weight: 700;
+            transition: 0.3s ease;
         }
-        
-        .recommend-btn:hover { background: #0a5d80; }
+        .recommend-btn:hover { background: #0a5d80; transform: translateY(-2px); }
 
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            .navbar { gap: 10px; font-size: 0.85rem; }
-            .hub-section { padding: 1.5rem; }
-            .page-title-area { padding-top: 2rem; }
+        /* Sidequest Styles */
+        .sidequest-item { 
+            margin-bottom: 2.5rem; 
+        }
+        .sidequest-item:last-child { margin-bottom: 0; }
+        
+        .sidequest-img { 
+            width: 100%; 
+            height: 200px; 
+            background: #eee; 
+            border-radius: 12px; 
+            margin-bottom: 15px; 
+            object-fit: cover; 
+            display: block;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .sidequest-item h4 { color: #0c5ebc; font-size: 1.2rem; margin-bottom: 8px; }
+        .sidequest-item p { font-size: 0.9rem; color: #444; margin-bottom: 12px; line-height: 1.5; }
+        .quest-link { font-weight: 700; color: #764ba2; text-decoration: none; font-size: 0.85rem; }
+
+        @media (max-width: 850px) {
+            .hub-grid { grid-template-columns: 1fr; }
+            .page-title-area h1 { font-size: 2rem; }
+            .container { padding: 0 20px; }
         }
     </style>
 </head>
@@ -159,43 +150,18 @@
             <h1 class="logo"><a href="index.html">Salim Oyinlọlá</a></h1>
             <ul class="navbar">
                 <li><a href="news.html">News</a></li>
-                <li><a href="commonplace.html">Commonplace</a></li>
+                <li><a href="registry.html">Registry</a></li>
             </ul>
         </nav>
     </header>
 
     <div class="container">
         <div class="page-title-area">
-            <h1>The Commonplace</h1>
-            <p>A collection of my thoughts, current readings, and technical shares.</p>
+            <h1>The Registry</h1>
+            <p>Tracking active pursuits, intellectual consumption, and community impact.</p>
         </div>
 
         <div class="hub-grid">
-            <div class="hub-section">
-                <h2>📝 Recent Thoughts</h2>
-                <div class="blog-post">
-                    <img src="assets/img/blog1.jpg" class="blog-img" alt="Technical Writing Preview">
-                    <small>Oct 2024</small>
-                    <h4>Technical Writing as Storytelling</h4>
-                    <a href="#" class="read-more-link">READ MORE →</a>
-                </div>
-                <div class="blog-post">
-                    <img src="assets/img/blog2.jpg" class="blog-img" alt="AI Ethics Preview">
-                    <small>Sept 2024</small>
-                    <h4>The Intersection of AI and Ethics</h4>
-                    <a href="#" class="read-more-link">READ MORE →</a>
-                </div>
-                <div class="blog-post">
-                    <img src="assets/img/blog3.jpg" class="blog-img" alt="Azure AI Preview">
-                    <small>Aug 2024</small>
-                    <h4>Deploying with Azure AI</h4>
-                    <a href="#" class="read-more-link">READ MORE →</a>
-                </div>
-                <p style="text-align: center; margin-top: 1rem;">
-                    <a href="blog-archive.html" style="color: #666; font-size: 0.8rem; text-decoration: none;">+ 14 more articles in archive</a>
-                </p>
-            </div>
-
             <div class="hub-section">
                 <h2>📚 Reading List</h2>
                 
@@ -225,28 +191,20 @@
             </div>
 
             <div class="hub-section">
-                <h2>Sidequests</h2>
+                <h2>🎮 Sidequests</h2>
                 
-                <div class="blog-post">
-                    <div class="sidequest-img-container" style="overflow: hidden; border-radius: 8px;">
-                        <img src="assets/img/btc-preview.jpg" alt="Beyond the Classroom" class="blog-img" style="height: 160px; transition: transform 0.3s ease;">
-                    </div>
-                    <h4 style="margin-top:15px;">Beyond the Classroom</h4>
-                    <p style="font-size: 0.85rem; color: #444; margin-bottom: 10px;">
-                        <strong>The Vision:</strong> Bridging the gap between academic theory and industry reality. We document the journeys of students building remarkable careers to inspire a generation of intentional achievers.
-                    </p>
-                    <a href="https://www.youtube.com/@btcwso" target="_blank" class="read-more-link">WATCH THE STORIES →</a>
+                <div class="sidequest-item">
+                    <img src="assets/img/btc-preview.jpg" alt="Beyond the Classroom" class="sidequest-img">
+                    <h4>Beyond the Classroom</h4>
+                    <p><strong>The Vision:</strong> Bridging the gap between academic theory and industry reality by documenting student success stories to inspire intentional career growth.</p>
+                    <a href="https://www.youtube.com/@btcwso" target="_blank" class="quest-link">EXPLORE THE CHANNEL →</a>
                 </div>
 
-                <div class="blog-post" style="border-bottom: none;">
-                    <div class="sidequest-img-container" style="overflow: hidden; border-radius: 8px;">
-                        <img src="assets/img/soundasabell-preview.jpg" alt="SoundAsABell Initiative" class="blog-img" style="height: 160px; transition: transform 0.3s ease;">
-                    </div>
-                    <h4 style="margin-top:15px;">The SoundAsABell Initiative</h4>
-                    <p style="font-size: 0.85rem; color: #444; margin-bottom: 10px;">
-                        <strong>The Mission:</strong> Starting as a United Nations Millennium Fellow in the Class of 2021, working on alleviating the stigma of mental illness in Nigeria. We are on a quest to break the culture of silence through early-age education and sustainable advocacy.
-                    </p>
-                    <a href="https://www.linkedin.com/company/soundasabell-initiative/" target="_blank" class="read-more-link">JOIN THE CAUSE →</a>
+                <div class="sidequest-item">
+                    <img src="assets/img/soundasabell-preview.jpg" alt="SoundAsABell Initiative" class="sidequest-img">
+                    <h4>The SoundAsABell Initiative</h4>
+                    <p><strong>The Mission:</strong> Advocating for mental health awareness in Nigeria. We work to dismantle stigma through education and open dialogue, a journey started as a UN Millennium Fellow.</p>
+                    <a href="https://www.linkedin.com/company/soundasabell-initiative/" target="_blank" class="quest-link">JOIN THE INITIATIVE →</a>
                 </div>
             </div>
         </div>
