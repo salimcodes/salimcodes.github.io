@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Salim Oyinlola - The Commonplace</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* Reusing your Hub styling with minor tweaks */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Overpass Mono', monospace; color: #0c5ebc; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; }
+        .site-header { background: white; padding: 1rem 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        .flex-wrap { display: flex; justify-content: space-between; align-items: center; }
+        .logo a { color: #0a5d80; text-decoration: none; font-weight: 700; font-size: 1.5rem; }
+        .navbar { display: flex; list-style: none; gap: 20px; }
+        .navbar a { text-decoration: none; color: #0c5ebc; }
+        .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .hub-section { background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .blog-post { margin-bottom: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; }
+        .blog-img { width: 100%; height: 120px; background: #eee; border-radius: 8px; margin-bottom: 10px; object-fit: cover; }
+        .read-more-link { font-weight: 700; color: #764ba2; text-decoration: none; font-size: 0.8rem; }
+        .book-cat { margin-top: 1.5rem; }
+        .book-cat h3 { font-size: 0.9rem; color: #764ba2; margin-bottom: 5px; text-transform: uppercase; }
+        .book-list { list-style: none; font-size: 0.9rem; }
+        .recommend-btn { display: block; margin-top: 1.5rem; background: #0c5ebc; color: white; text-align: center; padding: 10px; border-radius: 5px; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <nav class="nav container flex-wrap">
+            <h1 class="logo"><a href="index.html">Salim Oyinlọlá</a></h1>
+            <ul class="navbar">
+                <li><a href="news.html">News</a></li>
+                <li><a href="commonplace.html">Commonplace</a></li>
+                <li><a href="resources.html">Resources</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container page">
+        <h1 style="text-align: center; margin-top: 2rem; color: #0a5d80;">The Commonplace</h1>
+        <p style="text-align: center; color: #666;">A collection of my thoughts, current readings, and technical shares.</p>
+
+        <div class="hub-grid">
+            <div class="hub-section">
+                <h2>📝 Recent Thoughts</h2>
+                <div class="blog-post">
+                    <img src="assets/img/blog1.jpg" class="blog-img" alt="Post preview">
+                    <small>Oct 2024</small>
+                    <h4>Technical Writing as Storytelling</h4>
+                    <a href="#" class="read-more-link">READ MORE →</a>
+                </div>
+                <div class="blog-post">
+                    <img src="assets/img/blog2.jpg" class="blog-img" alt="Post preview">
+                    <small>Sept 2024</small>
+                    <h4>The Intersection of AI and Ethics</h4>
+                    <a href="#" class="read-more-link">READ MORE →</a>
+                </div>
+                <div class="blog-post">
+                    <img src="assets/img/blog3.jpg" class="blog-img" alt="Post preview">
+                    <small>Aug 2024</small>
+                    <h4>Deploying with Azure AI</h4>
+                    <a href="#" class="read-more-link">READ MORE →</a>
+                </div>
+                <p style="text-align: center;"><small>+ 14 more articles in archive</small></p>
+            </div>
+
+            <div class="hub-section">
+                <h2>📚 Reading List</h2>
+                
+                <div class="book-cat">
+                    <h3>📖 In-Progress</h3>
+                    <ul class="book-list">
+                        <li>• "The Master Algorithm" - Pedro Domingos</li>
+                    </ul>
+                </div>
+
+                <div class="book-cat">
+                    <h3>✅ Recently Completed</h3>
+                    <ul class="book-list">
+                        <li>• "Shoe Dog" - Phil Knight</li>
+                        <li>• "Atomic Habits" - James Clear</li>
+                    </ul>
+                </div>
+
+                <div class="book-cat">
+                    <h3>⏳ Queued</h3>
+                    <ul class="book-list">
+                        <li>• "Deep Work" - Cal Newport</li>
+                    </ul>
+                </div>
+
+                <a href="https://forms.gle/your-form-id" class="recommend-btn">Recommend a Book</a>
+            </div>
+
+            <div class="hub-section">
+                <h2>🎥 YouTube</h2>
+                <div class="blog-post">
+                    <div style="background:#ff0000; height:120px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:white;">▶️</div>
+                    <h4 style="margin-top:10px;">Beyond The Classroom: Season 2</h4>
+                    <a href="#" class="read-more-link">WATCH ON YOUTUBE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
