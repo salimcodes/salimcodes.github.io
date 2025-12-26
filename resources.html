@@ -1,82 +1,338 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Salim Oyinlola</title>
     <meta charset="utf-8" />
-    <meta name="google-site-verification" content="x90m5dgpe4F2vr3QIo56ycq2CR3JKLvZvqDGZ25jIss" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="This website is for Salim Oyinlola where you'd find up-to-date information about his work and other activities." />
-    <meta name="keywords" content="Salim Oyinlola, Machine Learning, Community, Artificial Intelligence" />
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link href="https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300;400;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
-    <link rel="author" href="https://salimoyinlola.medium.com/" />
-    <link rel="author" href="https://www.linkedin.com/in/salim-oyinlola/" />
-    <link rel="author" href="https://hashnode.com/@salimcodes" />
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png" />
-    <!-- You can also include a .ico file for wider browser compatibility -->
-    <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon" /> 
-</head>
-  
-  <body>
-    <header class="site-header">
-      <nav class="nav">
-        <div class="container flex-wrap">
-          <h1 class="logo">
-            <a href="https://salimcodes.github.io">Salim Oyinlọlá</a>
-          </h1>
-          <ul class="navbar">
-            <li><a href="news.html">News</a></li>
-            <li><a href="resources.html">Resources</a></li>
-            <li><a href="blog.html">Marketplace</a></li>
-            <li>
-              <a
-                href="https://www.pexels.com/@salim-oyinlola-778129552/"
-                target="_blank"
-                >Photography</a
-              >
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </header>
-    <div class="page container">
-      <h1 class="header-name">Resources</h1>
-      <ul class="list">
-
-
-        <li>
-            <a href="assets/Salim Olanrewaju Oyinlola.pdf">Résumé</a> 
-        </li>
-
-        <li>
-          <a href="assets/GitHub Campus Expert Application for Salim Oyinlola.pdf">Salim's Application Essays for the GitHub Campus Expert program</a> [Aug. 2022]
-        </li>
-
-        <li>
-            <a href="assets/Application for Microsoft-Learn Student Ambassador.pdf">Salim's Application Essays for the Microsoft Learn Student Ambassador program</a> [Dec. 2021]
-        </li>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
-        <li>
-          <a href="assets/Application for Millennium Fellowship Round 2.pdf">Salim's Application Essays for the second round of the United Nation Millennium Fellowship</a> [Jan. 2021]
-        </li>
-    </ul>
-  </div>
-  <footer class="site-footer">
-    <div class="container">
-      <small> <b>Last Updated:</b> January 2024 </small>
-      <small class="block">
-        © Salim Oyinlola. Shamelessly forked from
-        <a href="https://stevenkolawole.github.io/" target="_blank"
-          ><span style="color: rgb(10, 93, 128)">Steven Kolawole's page</span></a
-        >· 
-      </small>
+        body {
+            font-family: 'Overpass Mono', monospace;
+            color: #0c5ebc;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .site-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav {
+            padding: 1rem 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .flex-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .logo a {
+            color: #0a5d80;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+        
+        .logo a:hover {
+            color: #667eea;
+        }
+        
+        .navbar {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .navbar a {
+            color: #0c5ebc;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .navbar a:hover {
+            color: #764ba2;
+        }
+        
+        .page {
+            padding: 3rem 2rem;
+        }
+        
+        .header-name {
+            text-align: center;
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hub-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .hub-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+        }
+        
+        .hub-section:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hub-section h2 {
+            color: #0a5d80;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .blog-posts {
+            list-style: none;
+        }
+        
+        .blog-post {
+            padding: 1rem;
+            border-left: 4px solid #667eea;
+            margin-bottom: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .blog-post:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .blog-post h3 {
+            color: #0c5ebc;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .blog-post p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        
+        .book-card {
+            text-align: center;
+        }
+        
+        .book-cover {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        
+        .book-cover:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+        
+        .book-card h3 {
+            color: #0c5ebc;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .book-card p {
+            color: #666;
+            font-size: 0.8rem;
+        }
+        
+        .video-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .video-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .video-card:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .video-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+        
+        .video-card h3 {
+            color: #0c5ebc;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .video-card p {
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        @media (max-width: 767px) {
+            .navbar {
+                width: 100%;
+                justify-content: center;
+                margin-top: 1rem;
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .header-name {
+                font-size: 2rem;
+            }
+            
+            .hub-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .book-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <nav class="nav">
+            <div class="container flex-wrap">
+                <h1 class="logo">
+                    <a href="https://salimcodes.github.io">Salim Oyinlọlá</a>
+                </h1>
+                <ul class="navbar">
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="resources.html">Resources</a></li>
+                    <li><a href="blog.html">Hub</a></li>
+                    <li><a href="https://www.pexels.com/@salim-oyinlola-778129552/" target="_blank">Photography</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    
+    <div class="page container">
+        <h1 class="header-name">My Hub</h1>
+        
+        <div class="hub-grid">
+            <!-- Blog Section -->
+            <div class="hub-section">
+                <h2>📝 Blog</h2>
+                <ul class="blog-posts">
+                    <li class="blog-post">
+                        <h3>Getting Started with Machine Learning</h3>
+                        <p>An introduction to ML concepts and practical applications in modern software development.</p>
+                    </li>
+                    <li class="blog-post">
+                        <h3>Building Intelligent Systems</h3>
+                        <p>Exploring the intersection of AI and embedded systems for IoT applications.</p>
+                    </li>
+                    <li class="blog-post">
+                        <h3>The Future of AI in Community Tech</h3>
+                        <p>How artificial intelligence is transforming community-driven technology initiatives.</p>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Books Section -->
+            <div class="hub-section">
+                <h2>📚 Books</h2>
+                <div class="book-grid">
+                    <div class="book-card">
+                        <div class="book-cover">📘</div>
+                        <h3>AI Fundamentals</h3>
+                        <p>A practical guide</p>
+                    </div>
+                    <div class="book-card">
+                        <div class="book-cover">📗</div>
+                        <h3>IoT Systems</h3>
+                        <p>Building connected devices</p>
+                    </div>
+                    <div class="book-card">
+                        <div class="book-cover">📕</div>
+                        <h3>ML Patterns</h3>
+                        <p>Design patterns for ML</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- YouTube Section -->
+            <div class="hub-section">
+                <h2>🎥 YouTube</h2>
+                <div class="video-grid">
+                    <div class="video-card">
+                        <div class="video-thumbnail">▶️</div>
+                        <h3>Introduction to Neural Networks</h3>
+                        <p>Understanding the basics of deep learning architectures</p>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-thumbnail">▶️</div>
+                        <h3>Building Your First AI Project</h3>
+                        <p>Step-by-step tutorial for beginners</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </footer>
 </body>
 </html>
