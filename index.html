@@ -10,6 +10,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300;400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" />
     <link rel="icon" type="image/png" href="assets/img/favicon-32x32.png" />
+
+    <style>
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px !important; /* Forces a margin on the left and right */
+            }
+            
+            .page-intro {
+                flex-direction: column !important; /* Stacks image and text vertically */
+                text-align: center;
+                gap: 20px !important;
+            }
+
+            .bio-text p {
+                margin-bottom: 15px;
+            }
+
+            .flex-wrap {
+                justify-content: center !important;
+                gap: 15px;
+            }
+
+            .navbar {
+                padding-bottom: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
     <header class="site-header">
@@ -71,8 +99,8 @@
     </section>
 
     <footer class="site-footer">
-        <div class="container">
-            <small><b>Last Updated:</b> Dec 2025</small>
+        <div class="container" style="padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.1);">
+            <small><b>Last Updated:</b> Dec 2025</small><br>
             <small class="block">© Salim Oyinlola. Forked from Steven Kolawole.</small>
         </div>
     </footer>
