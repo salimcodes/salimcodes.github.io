@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Salim Oyinlola | Blog Archive</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Overpass Mono', monospace; 
+            color: #0c5ebc; 
+            background: #f8f9fa; 
+            line-height: 1.6;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
+
+        .site-header { background: white; padding: 1rem 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .nav { display: flex; justify-content: space-between; align-items: center; }
+        .logo a { color: #0a5d80; text-decoration: none; font-weight: 700; }
+        .back-link { text-decoration: none; color: #764ba2; font-weight: 600; font-size: 0.9rem; }
+
+        .archive-header { padding: 4rem 0 2rem 0; }
+        .archive-header h1 { color: #0a5d80; font-size: 2rem; }
+
+        /* Archive List */
+        .archive-list { list-style: none; margin-top: 2rem; }
+        .archive-item {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 20px;
+            margin-bottom: 3rem;
+            align-items: start;
+        }
+
+        .archive-date { font-size: 0.85rem; color: #888; margin-top: 5px; }
+        
+        .archive-content h2 { font-size: 1.25rem; margin-bottom: 10px; }
+        .archive-content h2 a { color: #0c5ebc; text-decoration: none; transition: 0.3s; }
+        .archive-content h2 a:hover { color: #764ba2; }
+        
+        .archive-content p { color: #555; font-size: 0.95rem; margin-bottom: 10px; }
+        
+        .medium-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            background: #eef2f7;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #764ba2;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        @media (max-width: 600px) {
+            .archive-item { grid-template-columns: 1fr; gap: 10px; }
+            .archive-date { margin-bottom: 0; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container nav">
+            <h1 class="logo"><a href="index.html">Salim Oyinlọlá</a></h1>
+            <a href="commonplace.html" class="back-link">← Back to Commonplace</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <header class="archive-header">
+            <h1>Writing Archive</h1>
+            <p>A chronological list of my technical articles, memoirs, and thoughts.</p>
+        </header>
+
+        <ul class="archive-list">
+            <li class="archive-item">
+                <div class="archive-date">Oct 24, 2024</div>
+                <div class="archive-content">
+                    <span class="medium-tag">Medium</span>
+                    <h2><a href="https://medium.com/your-link-here" target="_blank">Technical Writing as Storytelling</a></h2>
+                    <p>Exploring how to approach technical documentation with a narrative flair to engage readers more deeply.</p>
+                </div>
+            </li>
+
+            <li class="archive-item">
+                <div class="archive-date">Sep 12, 2024</div>
+                <div class="archive-content">
+                    <span class="medium-tag">Medium</span>
+                    <h2><a href="https://medium.com/your-link-here" target="_blank">The Intersection of AI and Ethics</a></h2>
+                    <p>A look at the moral landscape of machine learning and the responsibility of developers in 2024.</p>
+                </div>
+            </li>
+
+            </ul>
+    </main>
+</body>
+</html>
