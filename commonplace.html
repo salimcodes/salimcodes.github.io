@@ -1,29 +1,156 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Salim Oyinlola - The Commonplace</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300;400;600;700&display=swap" rel="stylesheet" />
     <style>
-        /* Reusing your Hub styling with minor tweaks */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Overpass Mono', monospace; color: #0c5ebc; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; }
-        .site-header { background: white; padding: 1rem 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
-        .flex-wrap { display: flex; justify-content: space-between; align-items: center; }
+        
+        body { 
+            font-family: 'Overpass Mono', monospace; 
+            color: #0c5ebc; 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Header Style */
+        .site-header { 
+            background: white; 
+            padding: 1rem 0; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+        }
+
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 1.5rem; /* Standard mobile padding */
+        }
+
+        .flex-wrap { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            flex-wrap: wrap;
+        }
+
         .logo a { color: #0a5d80; text-decoration: none; font-weight: 700; font-size: 1.5rem; }
         .navbar { display: flex; list-style: none; gap: 20px; }
-        .navbar a { text-decoration: none; color: #0c5ebc; }
-        .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-top: 3rem; }
-        .hub-section { background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .blog-post { margin-bottom: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; }
-        .blog-img { width: 100%; height: 120px; background: #eee; border-radius: 8px; margin-bottom: 10px; object-fit: cover; }
+        .navbar a { text-decoration: none; color: #0c5ebc; font-weight: 600; transition: 0.3s; }
+        .navbar a:hover { color: #764ba2; }
+
+        /* Page Layout */
+        .page-title-area {
+            text-align: center;
+            padding: 3rem 1rem 1rem 1rem;
+        }
+        
+        .page-title-area h1 { color: #0a5d80; margin-bottom: 0.5rem; }
+        .page-title-area p { color: #666; font-size: 0.9rem; }
+
+        .hub-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 2rem; 
+            margin: 2rem 0 4rem 0;
+        }
+
+        .hub-section { 
+            background: white; 
+            border-radius: 15px; 
+            padding: 2rem; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .hub-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .hub-section h2 { 
+            color: #0a5d80; 
+            margin-bottom: 1.5rem; 
+            font-size: 1.4rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Blog Items */
+        .blog-post { 
+            margin-bottom: 1.5rem; 
+            padding-bottom: 1rem; 
+            border-bottom: 1px solid #f9f9f9;
+        }
+        
+        .blog-post:last-child { border-bottom: none; }
+        
+        .blog-img { 
+            width: 100%; 
+            height: 140px; 
+            background: #eee; 
+            border-radius: 8px; 
+            margin-bottom: 10px; 
+            object-fit: cover; 
+            display: block;
+        }
+
+        .blog-post h4 { margin: 0.5rem 0; font-size: 1rem; line-height: 1.3; }
         .read-more-link { font-weight: 700; color: #764ba2; text-decoration: none; font-size: 0.8rem; }
-        .book-cat { margin-top: 1.5rem; }
-        .book-cat h3 { font-size: 0.9rem; color: #764ba2; margin-bottom: 5px; text-transform: uppercase; }
-        .book-list { list-style: none; font-size: 0.9rem; }
-        .recommend-btn { display: block; margin-top: 1.5rem; background: #0c5ebc; color: white; text-align: center; padding: 10px; border-radius: 5px; text-decoration: none; }
+        
+        /* Books Styling */
+        .book-cat { margin-bottom: 1.5rem; }
+        .book-cat h3 { 
+            font-size: 0.85rem; 
+            color: #764ba2; 
+            margin-bottom: 8px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+        }
+        
+        .book-list { list-style: none; }
+        .book-list li {
+            font-size: 0.9rem;
+            padding: 4px 0;
+            color: #444;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .book-list li::before {
+            content: "•";
+            color: #764ba2;
+            font-weight: bold;
+            display: inline-block; 
+            width: 1em;
+            margin-left: 0;
+        }
+
+        .recommend-btn { 
+            display: block; 
+            margin-top: 2rem; 
+            background: #0c5ebc; 
+            color: white; 
+            text-align: center; 
+            padding: 12px; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        
+        .recommend-btn:hover { background: #0a5d80; }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .navbar { gap: 10px; font-size: 0.85rem; }
+            .hub-section { padding: 1.5rem; }
+            .page-title-area { padding-top: 2rem; }
+        }
     </style>
 </head>
 <body>
@@ -37,32 +164,36 @@
         </nav>
     </header>
 
-    <div class="container page">
-        <h1 style="text-align: center; margin-top: 2rem; color: #0a5d80;">The Commonplace</h1>
-        <p style="text-align: center; color: #666;">A collection of my thoughts, current readings, and technical shares.</p>
+    <div class="container">
+        <div class="page-title-area">
+            <h1>The Commonplace</h1>
+            <p>A collection of my thoughts, current readings, and technical shares.</p>
+        </div>
 
         <div class="hub-grid">
             <div class="hub-section">
                 <h2>📝 Recent Thoughts</h2>
                 <div class="blog-post">
-                    <img src="assets/img/blog1.jpg" class="blog-img" alt="Post preview">
+                    <img src="assets/img/blog1.jpg" class="blog-img" alt="Technical Writing Preview">
                     <small>Oct 2024</small>
                     <h4>Technical Writing as Storytelling</h4>
                     <a href="#" class="read-more-link">READ MORE →</a>
                 </div>
                 <div class="blog-post">
-                    <img src="assets/img/blog2.jpg" class="blog-img" alt="Post preview">
+                    <img src="assets/img/blog2.jpg" class="blog-img" alt="AI Ethics Preview">
                     <small>Sept 2024</small>
                     <h4>The Intersection of AI and Ethics</h4>
                     <a href="#" class="read-more-link">READ MORE →</a>
                 </div>
                 <div class="blog-post">
-                    <img src="assets/img/blog3.jpg" class="blog-img" alt="Post preview">
+                    <img src="assets/img/blog3.jpg" class="blog-img" alt="Azure AI Preview">
                     <small>Aug 2024</small>
                     <h4>Deploying with Azure AI</h4>
                     <a href="#" class="read-more-link">READ MORE →</a>
                 </div>
-                <p style="text-align: center;"><small>+ 14 more articles in archive</small></p>
+                <p style="text-align: center; margin-top: 1rem;">
+                    <a href="blog-archive.html" style="color: #666; font-size: 0.8rem; text-decoration: none;">+ 14 more articles in archive</a>
+                </p>
             </div>
 
             <div class="hub-section">
@@ -71,22 +202,22 @@
                 <div class="book-cat">
                     <h3>📖 In-Progress</h3>
                     <ul class="book-list">
-                        <li>• "The Master Algorithm" - Pedro Domingos</li>
+                        <li>"The Master Algorithm" - Pedro Domingos</li>
                     </ul>
                 </div>
 
                 <div class="book-cat">
                     <h3>✅ Recently Completed</h3>
                     <ul class="book-list">
-                        <li>• "Shoe Dog" - Phil Knight</li>
-                        <li>• "Atomic Habits" - James Clear</li>
+                        <li>"Shoe Dog" - Phil Knight</li>
+                        <li>"Atomic Habits" - James Clear</li>
                     </ul>
                 </div>
 
                 <div class="book-cat">
                     <h3>⏳ Queued</h3>
                     <ul class="book-list">
-                        <li>• "Deep Work" - Cal Newport</li>
+                        <li>"Deep Work" - Cal Newport</li>
                     </ul>
                 </div>
 
@@ -96,8 +227,9 @@
             <div class="hub-section">
                 <h2>🎥 YouTube</h2>
                 <div class="blog-post">
-                    <div style="background:#ff0000; height:120px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:white;">▶️</div>
-                    <h4 style="margin-top:10px;">Beyond The Classroom: Season 2</h4>
+                    <div style="background: linear-gradient(45deg, #ff0000, #b30000); height:160px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:white; font-size: 2.5rem; box-shadow: inset 0 0 50px rgba(0,0,0,0.2);">▶️</div>
+                    <h4 style="margin-top:15px;">Beyond The Classroom: Season 2</h4>
+                    <p style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">Exploring student success stories and tech journeys.</p>
                     <a href="#" class="read-more-link">WATCH ON YOUTUBE</a>
                 </div>
             </div>
