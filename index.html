@@ -62,91 +62,21 @@
         
         .page-title-area p { color: #666; font-size: 1rem; }
 
-        /* Two Column Grid */
-        .hub-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1.2fr; 
-            gap: 2.5rem; 
-            margin: 2rem 0 5rem 0;
+        .bio-text p { margin-bottom: 1.5rem; }
+
+        .social-item {
+            color: #0c5ebc;
+            font-size: 1.2rem;
+            transition: 0.3s;
         }
 
-        .hub-section { 
-            background: white; 
-            border-radius: 20px; 
-            padding: 2.5rem; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            height: fit-content;
+        .social-item:hover {
+            color: #764ba2;
         }
-
-        .hub-section h2 { 
-            color: #0a5d80; 
-            margin-bottom: 2rem; 
-            font-size: 1.6rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        /* Reading List Styles */
-        .book-cat { margin-bottom: 2rem; }
-        .book-cat h3 { 
-            font-size: 0.85rem; 
-            color: #764ba2; 
-            margin-bottom: 12px; 
-            text-transform: uppercase; 
-            letter-spacing: 1.5px;
-            border-left: 3px solid #764ba2;
-            padding-left: 10px;
-        }
-        
-        .book-list { list-style: none; }
-        .book-list li {
-            font-size: 0.95rem;
-            padding: 6px 0;
-            color: #333;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .book-list li:last-child { border-bottom: none; }
-
-        .recommend-btn { 
-            display: block; 
-            margin-top: 1rem; 
-            background: #0c5ebc; 
-            color: white; 
-            text-align: center; 
-            padding: 14px; 
-            border-radius: 10px; 
-            text-decoration: none; 
-            font-weight: 700;
-            transition: 0.3s ease;
-        }
-        .recommend-btn:hover { background: #0a5d80; transform: translateY(-2px); }
-
-        /* Sidequest Styles */
-        .sidequest-item { 
-            margin-bottom: 2.5rem; 
-        }
-        .sidequest-item:last-child { margin-bottom: 0; }
-        
-        .sidequest-img { 
-            width: 100%; 
-            height: 200px; 
-            background: #eee; 
-            border-radius: 12px; 
-            margin-bottom: 15px; 
-            object-fit: cover; 
-            display: block;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .sidequest-item h4 { color: #0c5ebc; font-size: 1.2rem; margin-bottom: 8px; }
-        .sidequest-item p { font-size: 0.9rem; color: #444; margin-bottom: 12px; line-height: 1.5; }
-        .quest-link { font-weight: 700; color: #764ba2; text-decoration: none; font-size: 0.85rem; }
 
         @media (max-width: 850px) {
-            .hub-grid { grid-template-columns: 1fr; }
+            .page-intro { flex-direction: column; text-align: center; }
             .page-title-area h1 { font-size: 2rem; }
-            .container { padding: 0 20px; }
         }
     </style>
 </head>
@@ -158,17 +88,17 @@
                 <ul class="navbar">
                     <li><a href="news.html">News</a></li>
                     <li><a href="registry.html">Registry</a></li>
-                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="blog.html">Memoirs</a></li>
                 </ul>
             </div>
         </nav>
     </header>
 
-    <article class="page container">
+    <article class="page container" style="margin-top: 50px;">
         <div class="page-content">
             <div class="page-intro" style="display: flex; align-items: center; gap: 30px; margin-bottom: 30px;">
                 <div class="page-intro-item">
-                    <img src="assets/img/Salim.jpg" alt="Salim Oyinlola" width="180px" class="roundImg" style="border-radius: 50%;" />
+                    <img src="assets/img/Salim.jpg" alt="Salim Oyinlola" width="180px" class="roundImg" style="border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" />
                 </div>
                 <div class="page-intro-item">
                     <h2 style="color: #0a5d80;">Hey. Hi. I am Salim Oyinlola.</h2>
@@ -192,26 +122,26 @@
         </div>
     </article>
 
-    <section class="container" style="padding-bottom: 50px;">
+    <section class="container" style="padding-bottom: 80px; margin-top: 40px;">
         <h2 class="header-name" style="border-bottom: 2px solid #0a5d80; padding-bottom: 10px; margin-bottom: 20px;">Latest News</h2>
-        <ul class="list">
-            <li>
+        <ul class="list" style="list-style: none;">
+            <li style="margin-bottom: 15px;">
                 <strong>Second Season of Open Source Stories:</strong> Featuring ten students across eight countries, now live on <a href="#"><span style="color: rgb(10, 93, 128)">YouTube</span></a>. (Nov. 2025)
             </li>
-            <li>
+            <li style="margin-bottom: 15px;">
                 <strong>Iowa State University REU:</strong> Joined the Translational AI Center (TrAC) under Dr. Soumik Sarkar. (May 2025)
             </li>
-            <li>
+            <li style="margin-bottom: 15px;">
                 <strong>Joined Curacel:</strong> Building AI-powered infrastructure for insurance solutions. (Apr. 2025)
             </li>
         </ul>
-        <div class="read-more-button" style="margin-top: 20px;">
-            <a href="news.html" style="background: #0a5d80; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">View Archive</a>
+        <div class="read-more-button" style="margin-top: 25px;">
+            <a href="news.html" style="background: #0a5d80; color: white; padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: 600;">View Archive</a>
         </div>
     </section>
 
-    <footer class="site-footer">
-        <div class="container" style="padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.1);">
+    <footer class="site-footer" style="padding: 40px 0; background: white;">
+        <div class="container" style="border-top: 1px solid rgba(0,0,0,0.1); padding-top: 20px;">
             <small><b>Last Updated:</b> Dec 2025</small><br>
             <small class="block">© Salim Oyinlola. Forked from Steven Kolawole.</small>
         </div>
