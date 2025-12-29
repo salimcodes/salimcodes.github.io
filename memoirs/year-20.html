@@ -39,44 +39,75 @@
 
         .memoir-container {
             background: white;
-            padding: 4rem 3rem;
+            padding: 4rem 3.5rem;
             border-radius: 24px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.05);
             margin: 3rem 0;
         }
 
-        .meta-tag {
-            display: inline-block;
-            background: #f0f4f8;
+        .meta-info {
+            font-size: 0.85rem;
             color: #764ba2;
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-size: 0.8rem;
+            margin-bottom: 2rem;
             font-weight: 700;
-            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        h1 { color: #0a5d80; font-size: 2.4rem; line-height: 1.2; margin-bottom: 2rem; }
+        h1 { color: #0a5d80; font-size: 2.5rem; line-height: 1.2; margin-bottom: 2.5rem; }
         
         .lab-records {
             border-left: 4px solid #764ba2;
-            padding-left: 1.5rem;
-            margin: 2rem 0;
-            background: #fafafa;
             padding: 1.5rem;
+            margin: 2.5rem 0;
+            background: #f8f9fa;
             border-radius: 0 12px 12px 0;
         }
 
-        .lab-records p { margin-bottom: 0.5rem; font-weight: 600; }
+        .lab-records p { margin-bottom: 0.5rem; }
+        .lab-records strong { color: #0a5d80; }
 
         .content { color: #333; font-size: 1.1rem; }
         .content p { margin-bottom: 1.8rem; }
-        .content blockquote {
+        
+        .content h2 { 
+            color: #0a5d80; 
+            margin: 3.5rem 0 1.5rem 0; 
+            font-size: 1.6rem; 
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Image Grid Styles */
+        .article-image-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 3rem 0;
+        }
+
+        .article-img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: block;
+        }
+
+        blockquote {
             font-style: italic;
             color: #555;
-            margin: 2rem 0;
-            padding-left: 1.5rem;
-            border-left: 3px solid #0c5ebc;
+            margin: 2.5rem 0;
+            padding: 1rem 2rem;
+            border-left: 4px solid #0c5ebc;
+            background: #f0f7ff;
+            font-size: 1.15rem;
+        }
+
+        .signature {
+            margin-top: 4rem;
+            font-weight: 700;
+            color: #0a5d80;
         }
 
         .footer-nav {
@@ -90,14 +121,15 @@
             text-decoration: none;
             color: #0c5ebc;
             font-weight: 700;
-            transition: 0.3s;
+            transition: 0.3s ease;
         }
 
         .back-btn:hover { color: #764ba2; }
 
         @media (max-width: 600px) {
-            .memoir-container { padding: 2rem 1.5rem; }
+            .memoir-container { padding: 2.5rem 1.5rem; }
             h1 { font-size: 1.8rem; }
+            .article-image-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -109,38 +141,63 @@
             <ul class="navbar">
                 <li><a href="../news.html">News</a></li>
                 <li><a href="../registry.html">Registry</a></li>
-                <li><a href="../blog.html">Memoirs</a></li>
+                <li><a href="../memoirs.html">Memoirs</a></li>
             </ul>
         </nav>
     </header>
 
     <main class="container">
         <article class="memoir-container">
-            <span class="meta-tag">JUL 31, 2022 • 5 MIN READ</span>
+            <div class="meta-info">Jul 31, 2022 • 5 min read</div>
             <h1>Year 20 — Lab Records of the Experiment that is Teenage Life</h1>
 
             <div class="lab-records">
-                <p>Test: A thirteen-year old + seven awesome years</p>
-                <p>Observation: Dynamic changes in his physical, social and emotional domains, fraught with uncertainties about his place in the grand scheme of things, and the world in general.</p>
-                <p>Inference: Adulthood sucks.</p>
+                <p><strong>Test:</strong> A thirteen-year old + seven awesome years</p>
+                <p><strong>Observation:</strong> Dynamic changes in his physical, social and emotional domains, fraught with uncertainties about his place in the grand scheme of things, and the world in general.</p>
+                <p><strong>Inference:</strong> Adulthood sucks.</p>
             </div>
 
             <div class="content">
-                <p>Year twenty. The barber’s shop would seem like an odd place to begin this experiment, but this is no ordinary experiment. It starts with some random kid in some random shop in some random suburb town in Nigeria struggling to contain his excitement as he sits and waits his turn impatiently at the barbershop. He stares around the shop as though it was any different from the countless times he had been there. He takes in the sights and sounds of the clippers, the chatter of the other customers, and the music playing on the radio.</p>
+                <p>Year twenty. The barber’s shop would seem like an odd place to begin this experiment, but this is no ordinary experiment. It starts with some random kid in some random shop in some random suburb town in Nigeria struggling to contain his excitement as he sits and waits his turn impatiently at the barbershop.</p>
+                
+                <p>He stares around the shop as though it was any different from the other ones he had been to. Like every other one, wallpapers with Ludacris hung on the wall, a banging playlist blared from the speakers, the barber had apprentices hovering around him and the customer and of course, the shop doubled as a game center. But really, this one was different. The day after, he would clock 13.</p>
 
-                <p>He is about to turn twenty, and he is feeling a mix of emotions. He is excited to be entering a new chapter in his life, but he is also a little bit nervous. He doesn’t know what the future holds, but he is ready to find out.</p>
+                <p>And so, it began with my first experiment — a haircut. I reckon that my teenage years started like the ending of a tragic movie. At 13, I had just moved past my table soccer phase and all I cared about was how to get that haircut (yes, that very one you’ve got in mind) but make sure my mum didn’t see it since <em>low cut</em> was what responsible boys have on.</p>
 
-                <blockquote>"I am turn twenty today, and I am not sure how to feel about it. It feels like just yesterday I was thirteen, and now I am a grown man. Where did the time go?"</blockquote>
+                <p>Between 14 and 16, all I wanted to do was argue that Cristiano Ronaldo is the greatest footballer of all time. Do not get me wrong. Of course, somewhere in the middle of all that, I had to worry about girls, my UTME and my SSCE but then, the beam on my face when I brought up those points I had thought of four months earlier midway through those arguments? That was golden. By the tail end of 17, that urge was slowly fading away. By 18, I avoided the arguments entirely or life just happened. Towards the tail end of 19, I spoke the same way a bird eats — in small amounts. In all, my energy level in general dropped as 20 came closer.</p>
 
-                <p>The teenager’s journey is a complex and often difficult one. It is a time of great change, both physically and emotionally. It is a time of self-discovery, as teenagers try to figure out who they are and what they want to do with their lives. It is also a time of great uncertainty, as teenagers navigate the challenges of school, relationships, and the transition to adulthood.</p>
+                <div class="article-image-container">
+                    <img src="../assets/img/teenager-1.jpg" alt="Salim Year 13" class="article-img">
+                    <img src="../assets/img/teenager-2.jpg" alt="Salim Reflections" class="article-img">
+                </div>
 
-                <p>The "experiment" of teenage life is one that we all go through. It is a time of learning and growth, and it is a time that stays with us for the rest of our lives. As I turn twenty today, I am looking back on my teenage years with a sense of gratitude. I am grateful for the experiences I have had, the people I have met, and the lessons I have learned. I am also looking forward to the future with a sense of excitement. I am ready to see what the next chapter of my life has in store for me.</p>
+                <p>Forgive the French, but nothing explains the last six years of my life as much as this scene from one of the better TV shows I have seen. How we spend our teenage years, they say, molds us into whom we end up becoming. Well, I spent it <em>trying to</em> figure out who I am, so what does that say about the man I would end up becoming?</p>
 
-                <p>Year twenty is just the beginning. The experiment continues.</p>
+                <h2>The Family Experiment</h2>
+                <p>As a teenager, unlike most other facets of life, I did not need an experiment to know that relationships with your family are very important. I realized that even if you get in a fight with your mom, she will always love and support you no matter what. Furthermore, I realized that family is always going to understand your struggles and help you through it. The memories that I made with them are very special.</p>
+
+                <h2>The Friends Experiment</h2>
+                <p>A number of friends came and went in the years but eventually, I found some really close friends that have always been there through some of the tough times. When Muhammed Ali said <em>“Friendship is one of the hardest things in the world to explain. It’s not something you learn in school. But if you haven’t learnt the meaning of friendship, you really haven’t learnt anything”</em>, that hit different. True friendship is forgiving, loving, comforting, honest, and humorous.</p>
+
+                <p>One of the things I learnt from this experiment is that there are three types of friendships — Friendships of utility, friendships of pleasure, and friendships of the good. Friendships of utility are where people are friends because they both benefit because of it — like a classmate. Friendships of pleasure happen when people become friends because of the enjoyment that it brings to both of them. Friendships of the good are the most valuable friendships that one can have but they are the hardest to find. They are based on appreciation and respect for each other.</p>
+
+                <h2>The Education Experiment</h2>
+                <p>After 2557 days in the laboratory, I conclude that the education system is flawed. Flawed in the sense that it only matters what teachers can see and grade. It doesn’t matter whether I’ve learned the information the class wants me to. On the contrary, it matters if I do great on that one test or if I manage to finish all those assignments before Monday.</p>
+
+                <p>As such, I am continuously stressed about the letters A, B, C, D, E and F. Apparently, the letters will never go away until I get out of school and even then, depending on what I want to do, I may have these letters haunting me for a long time. So, this just completely takes away from the purpose of actually listening in that one boring Mechanics of Materials class I have to take even though I might need that information later in life.</p>
+
+                <h2>Sports</h2>
+                <p>I cannot talk about the last seven years without referencing the role sport played in it. I spent a boatload of my teenage years obsessed with sport (-ing greatness). I drew a lot of inspiration from it. I think I considered a number of these athletes role models.</p>
+
+                <p>Well, my football ability is limited to the five-aside I play with my friends, I cannot make a free throw to save my life and I dare not move a car faster than 40mph but my love for Cristiano Ronaldo, Michael Jordan and Lewis Hamilton? That’s different. Of course, I knew I could not be them. However, they inspired me in ways words cannot do justice to. For that, I am grateful.</p>
+
+                <p>At the end of the day, I am twenty and an adult in the face of the law, but still a baby in the face of the Lord.</p>
+
+                <p class="signature">Dreaming big,<br>Salim🖤</p>
             </div>
 
             <div class="footer-nav">
-                <a href="../blog.html" class="back-btn">← Back to all Memoirs</a>
+                <a href="../memoirs.html" class="back-btn">← Back to Memoirs</a>
             </div>
         </article>
     </main>
