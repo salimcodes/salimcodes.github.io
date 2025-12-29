@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Salim Oyinlola - Memoirs</title>
+    <title>Year 20 — Lab Records | Salim Oyinlola</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300;400;600;700&display=swap" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="assets/img/favicon-32x32.png" />
+    <link rel="icon" type="image/png" href="../assets/img/favicon-32x32.png" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -14,7 +14,7 @@
             color: #0c5ebc; 
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
             min-height: 100vh;
-            line-height: 1.6;
+            line-height: 1.8;
         }
 
         .site-header { 
@@ -27,103 +27,77 @@
         }
 
         .container { 
-            max-width: 800px; 
+            max-width: 750px; 
             margin: 0 auto; 
             padding: 0 1.5rem; 
         }
 
-        .flex-wrap { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            flex-wrap: wrap;
-        }
-
+        .flex-wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         .logo a { color: #0a5d80; text-decoration: none; font-weight: 700; font-size: 1.5rem; }
         .navbar { display: flex; list-style: none; gap: 20px; }
         .navbar a { text-decoration: none; color: #0c5ebc; font-weight: 600; }
 
-        .page-title-area {
-            text-align: center;
-            padding: 4rem 1rem 2rem 1rem;
-        }
-        
-        .page-title-area h1 { 
-            color: #0a5d80; 
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem; 
-            letter-spacing: -1px;
-        }
-        
-        .poetic-subtitle { color: #666; font-size: 1rem; line-height: 1.8; }
-
-        .memoir-feed { 
-            margin: 2rem 0 5rem 0;
+        .memoir-container {
+            background: white;
+            padding: 4rem 3rem;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            margin: 3rem 0;
         }
 
-        .hub-section { 
-            background: white; 
-            border-radius: 20px; 
-            padding: 2.5rem; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-        }
-
-        .hub-section h2 { 
-            color: #0a5d80; 
-            margin-bottom: 1rem; 
-            font-size: 1.8rem;
-            line-height: 1.3;
-        }
-
-        .blog-cover-img {
-            width: 100%;
-            height: 350px;
-            background: #eee;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            object-fit: cover;
-            display: block;
-        }
-
-        .date-tag {
+        .meta-tag {
             display: inline-block;
-            background: #eef2f7;
+            background: #f0f4f8;
             color: #764ba2;
-            padding: 4px 12px;
+            padding: 5px 15px;
             border-radius: 50px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 700;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-        }
-
-        .preview-text {
-            color: #444;
-            font-size: 1rem;
             margin-bottom: 1.5rem;
         }
 
-        .preview-text strong {
-            color: #0a5d80;
+        h1 { color: #0a5d80; font-size: 2.4rem; line-height: 1.2; margin-bottom: 2rem; }
+        
+        .lab-records {
+            border-left: 4px solid #764ba2;
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
         }
 
-        .recommend-btn { 
-            display: inline-block; 
-            background: #0c5ebc; 
-            color: white; 
-            text-align: center; 
-            padding: 12px 30px; 
-            border-radius: 10px; 
-            text-decoration: none; 
-            font-weight: 700;
-            transition: 0.3s ease;
+        .lab-records p { margin-bottom: 0.5rem; font-weight: 600; }
+
+        .content { color: #333; font-size: 1.1rem; }
+        .content p { margin-bottom: 1.8rem; }
+        .content blockquote {
+            font-style: italic;
+            color: #555;
+            margin: 2rem 0;
+            padding-left: 1.5rem;
+            border-left: 3px solid #0c5ebc;
         }
-        .recommend-btn:hover { background: #0a5d80; transform: translateY(-2px); }
+
+        .footer-nav {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #0c5ebc;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover { color: #764ba2; }
 
         @media (max-width: 600px) {
-            .page-title-area h1 { font-size: 2rem; }
-            .blog-cover-img { height: 200px; }
+            .memoir-container { padding: 2rem 1.5rem; }
+            h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -131,45 +105,44 @@
 
     <header class="site-header">
         <nav class="nav container flex-wrap">
-            <h1 class="logo"><a href="index.html">Salim Oyinlọlá</a></h1>
+            <h1 class="logo"><a href="../index.html">Salim Oyinlọlá</a></h1>
             <ul class="navbar">
-                <li><a href="news.html">News</a></li>
-                <li><a href="registry.html">Registry</a></li>
-                <li><a href="blog.html">Memoirs</a></li>
+                <li><a href="../news.html">News</a></li>
+                <li><a href="../registry.html">Registry</a></li>
+                <li><a href="../blog.html">Memoirs</a></li>
             </ul>
         </nav>
     </header>
 
-    <div class="page-title-area">
-        <div class="container">
-            <h1>Memoirs</h1>
-            <p class="poetic-subtitle">
-                Here's to that random dreamer-kid curating his autobiography in real-time;<br> 
-                one story at a time. Perhaps, think of this as my public journal.<br>
-            </p>
-        </div>
-    </div>
-
     <main class="container">
-        <div class="memoir-feed">
-            
-            <article class="hub-section">
-                <img src="assets/img/year-20.jpg" alt="Year 20 Lab Records" class="blog-cover-img">
-                
-                <span class="date-tag">Jul 31, 2022</span>
-                
-                <h2>Year 20 — Lab Records of the Experiment that is Teenage Life</h2>
-                
-                <div class="preview-text">
-                    <p><strong>Test:</strong> A thirteen-year old + seven awesome years</p>
-                    <p><strong>Observation:</strong> Dynamic changes in his physical, social and emotional domains...</p>
-                    <p><strong>Inference:</strong> Adulthood sucks. Year twenty starts with some random kid in some random shop in a Nigerian suburb struggling to contain his excitement...</p>
-                </div>
+        <article class="memoir-container">
+            <span class="meta-tag">JUL 31, 2022 • 5 MIN READ</span>
+            <h1>Year 20 — Lab Records of the Experiment that is Teenage Life</h1>
 
-                <a href="memoirs/year-20.html" class="recommend-btn">Keep Reading</a>
-            </article>
+            <div class="lab-records">
+                <p>Test: A thirteen-year old + seven awesome years</p>
+                <p>Observation: Dynamic changes in his physical, social and emotional domains, fraught with uncertainties about his place in the grand scheme of things, and the world in general.</p>
+                <p>Inference: Adulthood sucks.</p>
+            </div>
 
-        </div>
+            <div class="content">
+                <p>Year twenty. The barber’s shop would seem like an odd place to begin this experiment, but this is no ordinary experiment. It starts with some random kid in some random shop in some random suburb town in Nigeria struggling to contain his excitement as he sits and waits his turn impatiently at the barbershop. He stares around the shop as though it was any different from the countless times he had been there. He takes in the sights and sounds of the clippers, the chatter of the other customers, and the music playing on the radio.</p>
+
+                <p>He is about to turn twenty, and he is feeling a mix of emotions. He is excited to be entering a new chapter in his life, but he is also a little bit nervous. He doesn’t know what the future holds, but he is ready to find out.</p>
+
+                <blockquote>"I am turn twenty today, and I am not sure how to feel about it. It feels like just yesterday I was thirteen, and now I am a grown man. Where did the time go?"</blockquote>
+
+                <p>The teenager’s journey is a complex and often difficult one. It is a time of great change, both physically and emotionally. It is a time of self-discovery, as teenagers try to figure out who they are and what they want to do with their lives. It is also a time of great uncertainty, as teenagers navigate the challenges of school, relationships, and the transition to adulthood.</p>
+
+                <p>The "experiment" of teenage life is one that we all go through. It is a time of learning and growth, and it is a time that stays with us for the rest of our lives. As I turn twenty today, I am looking back on my teenage years with a sense of gratitude. I am grateful for the experiences I have had, the people I have met, and the lessons I have learned. I am also looking forward to the future with a sense of excitement. I am ready to see what the next chapter of my life has in store for me.</p>
+
+                <p>Year twenty is just the beginning. The experiment continues.</p>
+            </div>
+
+            <div class="footer-nav">
+                <a href="../blog.html" class="back-btn">← Back to all Memoirs</a>
+            </div>
+        </article>
     </main>
 
 </body>
