@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reading the Serve — Computer Vision in Tennis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  HOW TO ADD / EDIT SLIDES                                        ║
+  ║                                                                  ║
+  ║  Every slide is one <section class="slide ...">. Copy one, paste ║
+  ║  it where you want it, change the words. Order = order in file.  ║
+  ║                                                                  ║
+  ║  MEDIA SLOTS  (<figure class="media" ...>)                       ║
+  ║   data-id    unique name (required — used to remember drops)     ║
+  ║   data-yt    YouTube video id   e.g. data-yt="MxpI9GKizZE"       ║
+  ║   data-src   local file next to this html, e.g. media/salah.jpg  ║
+  ║              or media/serve1.mp4 (videos autoplay, muted, loop)  ║
+  ║   data-label what the empty slot says                            ║
+  ║                                                                  ║
+  ║  OR just drag an image / video file onto any slot while the      ║
+  ║  deck is open. It is remembered in this browser. Hover a slot    ║
+  ║  and click ✕ to clear it.                                        ║
+  ║                                                                  ║
+  ║  KEYS  ← → / Space: move   O: overview   N: notes   F: fullscreen║
+  ║        E: switch YouTube between in-slide play / open-in-tab     ║
+  ║                                                                  ║
+  ║  Speaker notes: <aside class="notes">…</aside> inside a slide.   ║
+  ║                                                                  ║
+  ║  LAYOUTS: title · divider · full · split · stat · grid5 · trio   ║
+  ╚══════════════════════════════════════════════════════════════════╝
+-->
+<style>
+:root{
+  --bg:#0a0a0b; --ink:#f3f0e8; --mute:#8b8a84; --line:#2a2a2c;
+  --ball:#dcff4a; --clay:#e2734a; --grass:#3f7d4e; --hard:#3c6fd6;
+  --display:"Bricolage Grotesque", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#000;color:var(--ink);overflow:hidden;font-family:var(--display)}
+#viewport{position:fixed;inset:0;overflow:hidden}
+#stage{width:1920px;height:1080px;position:absolute;left:50%;top:50%;transform-origin:center center;background:var(--bg);overflow:hidden}
+
+/* ---------- slides ---------- */
+.slide{position:absolute;inset:0;padding:96px 120px;display:none;flex-direction:column}
+.slide.active{display:flex;animation:in .5s cubic-bezier(.2,.7,.2,1)}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.notes{display:none}
+
+.kicker{font-family:var(--mono);font-size:26px;letter-spacing:.18em;text-transform:uppercase;color:var(--ball)}
+h1,h2{font-weight:800;letter-spacing:-.035em;line-height:.92}
+h1{font-size:200px}
+h2{font-size:112px}
+.sub{font-size:44px;color:var(--mute);font-weight:400;letter-spacing:-.01em}
+.cite{font-family:var(--mono);font-size:20px;color:var(--mute);letter-spacing:.04em}
+.ball{color:var(--ball)}
+.chips{display:flex;gap:16px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:26px;padding:12px 22px;border:1.5px solid var(--line);border-radius:999px;color:var(--ink);background:rgba(10,10,11,.6);backdrop-filter:blur(6px)}
+.chip b{color:var(--ball);font-weight:600}
+
+/* title */
+.slide.title{justify-content:flex-end;gap:36px}
+.slide.title h1{font-size:230px}
+.court-bg{position:absolute;inset:0;opacity:.16;pointer-events:none}
+
+/* divider */
+.slide.divider{justify-content:center;gap:24px}
+.slide.divider .num{font-family:var(--mono);font-size:34px;color:var(--ball);letter-spacing:.2em}
+.slide.divider h2{font-size:170px}
+
+/* full-bleed media w/ caption */
+.slide.full{padding:0}
+.slide.full > .media{position:absolute;inset:0;border-radius:0}
+.slide.full .cap{position:absolute;left:0;right:0;bottom:0;padding:200px 120px 84px;
+  background:linear-gradient(to top,rgba(10,10,11,.96) 0%,rgba(10,10,11,.7) 45%,transparent 100%);
+  display:flex;flex-direction:column;gap:22px;pointer-events:none}
+.slide.full .cap .chips{pointer-events:auto}
+.slide.full .cap.top{top:0;bottom:auto;padding:84px 120px 200px;background:linear-gradient(to bottom,rgba(10,10,11,.92),transparent)}
+
+/* grid4 · 2×2 photo grid */
+.slide.grid4{gap:36px;padding:72px 120px 64px}
+.g4{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:28px}
+.g4 .tile{position:relative;border-radius:28px;overflow:hidden;background:#141416}
+.g4 .tile > .media{position:absolute;inset:0;border-radius:0;min-height:0}
+.g4 .lab{position:absolute;left:0;right:0;bottom:0;padding:90px 34px 26px;background:linear-gradient(to top,rgba(10,10,11,.94),rgba(10,10,11,.55) 55%,transparent);display:flex;align-items:baseline;justify-content:space-between;gap:24px;pointer-events:none}
+.g4 .lab .nm{font-size:46px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.g4 .lab .sp{font-family:var(--mono);font-size:20px;letter-spacing:.14em;text-transform:uppercase;color:var(--ball);white-space:nowrap}
+.g4 .credit{position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:13px;color:rgba(255,255,255,.75);background:rgba(0,0,0,.5);padding:4px 10px;border-radius:999px;pointer-events:none}
+
+/* split */
+.slide.split{flex-direction:row;gap:48px;padding:72px}
+.slide.split .col{flex:1;display:flex;flex-direction:column;gap:28px;min-width:0}
+.slide.split .col .media{flex:1}
+.slide.split h2{font-size:96px}
+
+/* stat */
+.slide.stat{flex-direction:row;gap:72px;align-items:stretch;padding:96px 96px 96px 120px}
+.slide.stat .left{width:640px;display:flex;flex-direction:column;justify-content:center;gap:28px;flex-shrink:0}
+.slide.stat .big{font-size:250px;font-weight:800;letter-spacing:-.06em;line-height:.85;color:var(--ball)}
+.slide.stat .unit{font-size:46px;line-height:1.1;color:var(--ink)}
+.slide.stat .right{flex:1;display:flex}
+.slide.stat .right .media{flex:1}
+
+/* grid5 */
+.slide.grid5{gap:56px;justify-content:center}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:28px;height:560px}
+.g5 .tile{border:1.5px solid var(--line);border-radius:28px;padding:36px 30px;display:flex;flex-direction:column;justify-content:space-between;background:#111113;cursor:pointer;transition:border-color .2s,transform .2s}
+.g5 .tile:hover{border-color:var(--ball);transform:translateY(-6px)}
+.g5 .tile .n{font-family:var(--mono);font-size:28px;color:var(--ball)}
+.g5 .tile svg{width:100%;height:220px}
+.g5 .tile .nm{font-size:50px;font-weight:800;letter-spacing:-.03em;line-height:.95}
+.g5 .tile .what{font-family:var(--mono);font-size:21px;color:var(--mute);margin-top:10px}
+
+/* trio */
+.slide.trio{gap:44px}
+.trio-row{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.trio-row .cell{display:flex;flex-direction:column;gap:18px}
+.trio-row .cell .media{flex:1}
+.trio-row .q{font-size:64px;font-weight:800;letter-spacing:-.03em;text-align:center}
+
+/* ---------- media slots ---------- */
+.media{position:relative;border-radius:28px;overflow:hidden;background:#141416;min-height:200px}
+.media > img,.media > video,.media > iframe{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover;display:block}
+.media.contain > img,.media.contain > video{object-fit:contain;background:#000}
+.media .ph{position:absolute;inset:18px;border:2px dashed #34343a;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;color:var(--mute);text-align:center;padding:30px;cursor:pointer;transition:border-color .2s,color .2s}
+.media .ph:hover,.media.drag .ph{border-color:var(--ball);color:var(--ink)}
+.media .ph svg{width:72px;height:72px;opacity:.7}
+.media .ph .l{font-family:var(--mono);font-size:24px;letter-spacing:.06em}
+.media .ph .h{font-family:var(--mono);font-size:17px;opacity:.6}
+.media.drag::after{content:"Drop to place";position:absolute;inset:0;display:grid;place-items:center;background:rgba(220,255,74,.14);font-family:var(--mono);font-size:32px;color:var(--ball);z-index:5}
+.media .clear{position:absolute;top:16px;right:16px;z-index:6;width:44px;height:44px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:20px;cursor:pointer;opacity:0;transition:opacity .2s}
+.media:hover .clear{opacity:1}
+
+/* youtube facade */
+.yt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;text-decoration:none;color:var(--ink);cursor:pointer;
+  background:radial-gradient(ellipse at 50% 40%,#1d1d21 0%,#0e0e10 70%)}
+.yt::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 119px,rgba(255,255,255,.025) 119px 120px),repeating-linear-gradient(0deg,transparent 0 119px,rgba(255,255,255,.025) 119px 120px)}
+.yt .play{position:relative;width:150px;height:150px;border-radius:50%;background:var(--ball);display:grid;place-items:center;box-shadow:0 0 0 0 rgba(220,255,74,.5);animation:pulse 2.4s infinite}
+.yt .play svg{width:56px;height:56px;margin-left:8px}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(220,255,74,.45)}70%{box-shadow:0 0 0 34px rgba(220,255,74,0)}100%{box-shadow:0 0 0 0 rgba(220,255,74,0)}}
+.yt .t{position:relative;font-family:var(--mono);font-size:24px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);max-width:80%;text-align:center}
+.yt .ext{position:relative;font-family:var(--mono);font-size:17px;color:#5d5d62}
+.yt-link{position:absolute;bottom:16px;right:16px;z-index:6;font-family:var(--mono);font-size:16px;color:#ddd;background:rgba(0,0,0,.6);padding:8px 14px;border-radius:999px;text-decoration:none;opacity:0;transition:opacity .2s}
+.media:hover .yt-link{opacity:1}
+.slide.full .yt{padding-bottom:260px}
+
+/* ---------- custom figures ---------- */
+.timeline{display:flex;align-items:flex-start;gap:0;margin-top:20px}
+.timeline .ev{flex:1;position:relative;padding-top:52px}
+.timeline .ev::before{content:"";position:absolute;top:14px;left:0;right:0;height:3px;background:var(--line)}
+.timeline .ev::after{content:"";position:absolute;top:2px;left:0;width:28px;height:28px;border-radius:50%;background:var(--ball)}
+.timeline .y{font-size:58px;font-weight:800;letter-spacing:-.03em}
+.timeline .w{font-family:var(--mono);font-size:22px;color:var(--mute);margin-top:6px}
+
+.bignums{display:flex;gap:80px}
+.bignums .bn .v{font-size:150px;font-weight:800;letter-spacing:-.05em;line-height:.9}
+.bignums .bn .k{font-family:var(--mono);font-size:26px;color:var(--mute);letter-spacing:.1em;text-transform:uppercase;margin-top:12px}
+
+.stamp{display:inline-block;border:6px solid var(--ball);color:var(--ball);padding:10px 34px;border-radius:18px;font-size:84px;font-weight:800;letter-spacing:-.02em;transform:rotate(-4deg)}
+
+/* ---------- chrome ---------- */
+#bar{position:fixed;left:0;bottom:0;height:4px;background:var(--ball);transition:width .35s;z-index:20}
+#count{position:fixed;right:22px;bottom:16px;font-family:var(--mono);font-size:13px;color:#555;z-index:20;user-select:none}
+#nav{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:8px;z-index:20;opacity:0;transition:opacity .25s}
+body:hover #nav{opacity:1}
+#nav button{background:rgba(30,30,32,.85);color:#ddd;border:1px solid #333;border-radius:999px;font-family:var(--mono);font-size:13px;padding:8px 14px;cursor:pointer}
+#nav button:hover{border-color:var(--ball);color:#fff}
+#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#1b1b1d;border:1px solid #333;color:#ddd;font-family:var(--mono);font-size:14px;padding:10px 18px;border-radius:999px;z-index:30;opacity:0;transition:opacity .3s;pointer-events:none}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:34vh;overflow:auto;background:rgba(14,14,16,.97);border-top:1px solid #333;padding:22px 32px 40px;font-size:18px;line-height:1.5;color:#cfcfcf;z-index:25;display:none;font-family:system-ui,sans-serif}
+#notes.on{display:block}
+#notes b{color:var(--ball)}
+
+/* overview */
+body.overview #viewport{display:none}
+#ov{display:none;position:fixed;inset:0;overflow:auto;padding:40px;background:#050505;z-index:15}
+body.overview #ov{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;align-content:start}
+#ov .th{aspect-ratio:16/9;border:1px solid #2a2a2c;border-radius:12px;padding:18px;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;background:#0e0e10}
+#ov .th:hover,#ov .th.cur{border-color:var(--ball)}
+#ov .th .i{font-family:var(--mono);font-size:12px;color:var(--ball)}
+#ov .th .tt{font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.05}
+
+.preds{display:flex;flex-direction:column;gap:22px}
+.preds .p{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1.5px solid var(--line);padding-bottom:18px}
+.preds .m{font-family:var(--mono);font-size:28px;color:var(--mute)}
+.preds .v{font-size:56px;font-weight:800;letter-spacing:-.02em}
+.preds .v.no{color:var(--clay)} .preds .v.no::after{content:" ✗"}
+.preds .v.ok{color:var(--ball)} .preds .v.ok::after{content:" ✓"}
+.limits{display:grid;grid-template-columns:repeat(4,1fr);gap:40px}
+.limits .b{font-size:260px;font-weight:800;letter-spacing:-.06em;line-height:.9;color:var(--ball)}
+.limits .t{font-size:46px;font-weight:700;letter-spacing:-.02em;margin-top:18px}
+
+/* ---------- analysis figures ---------- */
+.result-legend{display:flex;gap:30px;align-items:center;font-family:var(--mono);font-size:20px;color:var(--mute)}
+.result-legend span{display:flex;align-items:center;gap:10px}
+.result-legend i{width:24px;height:8px;border-radius:99px;background:var(--ink);display:inline-block}
+.result-legend .broad i{background:var(--ball)}
+.result-legend .llm i{background:var(--clay)}
+.result-legend .trained i{background:var(--ball)}
+.result-bars{display:flex;flex-direction:column;gap:17px;flex:1;justify-content:center}
+.result-row{display:grid;grid-template-columns:330px 1fr 108px;gap:22px;align-items:center}
+.result-row .model{font-size:28px;font-weight:700;line-height:1}
+.result-row .model small{display:block;font-family:var(--mono);font-weight:400;font-size:17px;color:var(--mute);margin-top:9px}
+.pair-track{height:52px;border-radius:10px;background:#171719;position:relative;overflow:visible}
+.pair-track .fine,.pair-track .broad{position:absolute;left:0;border-radius:10px}
+.pair-track .broad{top:0;height:22px;background:var(--ball)}
+.pair-track .fine{bottom:0;height:22px;background:var(--ink)}
+.result-row .vals{font-family:var(--mono);font-size:22px;line-height:1.45;text-align:right}
+.result-row .vals b{color:var(--ball)}
+
+.heatmap-wrap{display:grid;grid-template-columns:290px 1fr;gap:28px;min-height:0;flex:1}
+.heatmap-copy{display:flex;flex-direction:column;justify-content:flex-end;gap:26px;padding-bottom:6px}
+.heatmap-copy .big-callout{font-size:92px;font-weight:800;letter-spacing:-.05em;line-height:.88;color:var(--ball)}
+.heatmap-copy p{font-size:30px;line-height:1.15;color:var(--mute)}
+.heatmap{display:grid;gap:7px;align-content:center;min-height:0}
+.heatmap.broad-map{grid-template-columns:285px repeat(4,1fr)}
+.heatmap.class-map{grid-template-columns:280px repeat(6,1fr)}
+.hm-head{font-family:var(--mono);font-size:18px;color:var(--mute);display:flex;align-items:flex-end;justify-content:center;text-align:center;padding:0 8px 8px;line-height:1.15}
+.hm-label{font-size:25px;font-weight:700;display:flex;align-items:center;padding-right:18px;line-height:1}
+.hm-label small{display:block;font-family:var(--mono);font-weight:400;font-size:15px;color:var(--mute);margin-top:6px}
+.hm-cell{height:60px;border:1px solid #26262a;border-radius:9px;display:grid;place-items:center;font-family:var(--mono);font-size:21px;font-weight:600;color:var(--ink)}
+.class-map .hm-cell{height:45px;font-size:18px}
+.class-map .hm-label{font-size:21px}
+.hm-cell.hard{outline:2px solid var(--clay);outline-offset:-2px}
+.hm-scale{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:17px;color:var(--mute)}
+.hm-scale .grad{width:180px;height:12px;border-radius:99px;background:linear-gradient(90deg,#241713,#796126,var(--ball))}
+
+.matrix-pair{display:grid;grid-template-columns:1fr 1fr;gap:48px;flex:1;min-height:0}
+.matrix-panel{display:flex;flex-direction:column;gap:16px;min-width:0}
+.matrix-title{display:flex;justify-content:space-between;align-items:baseline}
+.matrix-title b{font-size:34px}
+.matrix-title span{font-family:var(--mono);font-size:17px;color:var(--mute)}
+.conf-matrix{display:grid;grid-template-columns:108px repeat(12,1fr);gap:4px;align-content:center;flex:1}
+.mx-head{font-family:var(--mono);font-size:14px;color:var(--mute);display:grid;place-items:center;height:30px}
+.mx-label{font-family:var(--mono);font-size:15px;color:var(--mute);display:flex;align-items:center;justify-content:flex-end;padding-right:8px}
+.mx-cell{height:38px;border-radius:5px;display:grid;place-items:center;font-family:var(--mono);font-size:13px;color:var(--ink);border:1px solid rgba(255,255,255,.04)}
+.mx-cell.diag{color:#111;font-weight:700}
+.mx-key{font-family:var(--mono);font-size:15px;color:var(--mute);line-height:1.45}
+
+.pair-list{display:flex;flex-direction:column;gap:25px;flex:1;justify-content:center}
+.pair-item{display:grid;grid-template-columns:380px 1fr 250px;gap:26px;align-items:center}
+.pair-name{font-size:28px;font-weight:700;line-height:1.05}
+.pair-bars{display:flex;flex-direction:column;gap:8px}
+.pair-line{height:18px;background:#171719;border-radius:99px;overflow:hidden}
+.pair-line span{display:block;height:100%;border-radius:99px}
+.pair-line.llm span{background:var(--clay)}
+.pair-line.trained span{background:var(--ball)}
+.pair-values{font-family:var(--mono);font-size:18px;line-height:1.55;color:var(--mute)}
+.pair-values b{font-weight:600;color:var(--ink)}
+
+.shared-layout{display:grid;grid-template-columns:500px 1fr;gap:74px;flex:1;min-height:0}
+.shared-stats{display:flex;flex-direction:column;justify-content:center;gap:46px}
+.shared-stat .v{font-size:150px;font-weight:800;letter-spacing:-.06em;line-height:.8;color:var(--ball)}
+.shared-stat .k{font-size:31px;line-height:1.05;margin-top:18px}
+.shared-classes{display:flex;flex-direction:column;justify-content:center;gap:30px}
+.shared-class{display:grid;grid-template-columns:260px 1fr 85px;gap:18px;align-items:center}
+.shared-class .nm{font-size:27px;font-weight:700}
+.shared-class .track{height:30px;background:#171719;border-radius:99px;overflow:hidden}
+.shared-class .track span{height:100%;display:block;background:var(--clay);border-radius:99px}
+.shared-class .track.pose span{background:var(--ball)}
+.shared-class .v{font-family:var(--mono);font-size:22px;text-align:right}
+.shared-note{border-top:1px solid var(--line);padding-top:24px;font-size:28px;color:var(--mute);line-height:1.15}
+.shared-note b{color:var(--ink)}
+
+/* Unity proof of concept */
+.slide.prototype{gap:24px;padding:58px 90px 46px}
+.slide.prototype h2{font-size:76px}
+.prototype-row{display:grid;grid-template-columns:1fr 1fr;gap:38px;flex:1;min-height:0}
+.prototype-item{display:grid;grid-template-rows:auto 1fr;gap:12px;min-height:0}
+.prototype-label{display:flex;align-items:baseline;justify-content:space-between;gap:24px}
+.prototype-label b{font-size:34px;letter-spacing:-.02em}
+.prototype-label span{font-family:var(--mono);font-size:18px;color:var(--mute);text-align:right}
+.prototype-label .miss{color:var(--clay)}
+.prototype-label .hit{color:var(--ball)}
+.prototype-row .media{min-height:0;border:1.5px solid var(--line);border-radius:22px}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+<!-- ═════════════════════ 1 · THE IDEA ═════════════════════ -->
+<section class="slide title" data-name="Title">
+  <svg class="court-bg" viewBox="0 0 1920 1080" fill="none" stroke="#dcff4a" stroke-width="3">
+    <rect x="260" y="140" width="1400" height="800"/>
+    <line x1="260" y1="240" x2="1660" y2="240"/><line x1="260" y1="840" x2="1660" y2="840"/>
+    <line x1="960" y1="140" x2="960" y2="940" stroke-dasharray="10 10"/>
+    <line x1="580" y1="240" x2="580" y2="840"/><line x1="1340" y1="240" x2="1340" y2="840"/>
+    <line x1="580" y1="540" x2="1340" y2="540"/>
+  </svg>
+  <div class="kicker">Computer vision · Tennis</div>
+  <h1>Reading<br>the <span class="ball">serve.</span></h1>
+  <div class="sub">Kayode Makinde · Salim Oyinlola</div>
+  <aside class="notes">Can a model tell a flat, slice and kick serve apart from video?</aside>
+</section>
+
+<section class="slide grid4" data-name="0 · CV in sport">
+  <div class="kicker">Computer vision · Sport</div>
+  <div class="g4">
+    <div class="tile"><figure class="media" data-id="cv-tracklimits" data-src="media/f1-track-limits.png" data-label="F1 track limits"></figure><div class="lab"><div class="nm">Track limits</div><div class="sp">Formula 1</div></div></div>
+    <div class="tile"><figure class="media" data-id="cv-offside" data-src="media/cv-offside.jpg" data-label="VAR offside"></figure><span class="credit">FIFA · semi-automated offside</span><div class="lab"><div class="nm">VAR · offside</div><div class="sp">Football</div></div></div>
+    <div class="tile"><figure class="media" data-id="cv-balltracking" data-src="media/cv-balltracking.jpg" data-label="Ball tracking"></figure><div class="lab"><div class="nm">Ball tracking &amp; replay</div><div class="sp">Tennis</div></div></div>
+    <div class="tile"><figure class="media" data-id="cv-movement" data-src="media/cv-movement.jpg" data-label="Movement analysis"></figure><span class="credit">THETIS dataset</span><div class="lab"><div class="nm">Stroke &amp; movement analysis</div><div class="sp">Coaching</div></div></div>
+  </div>
+  <aside class="notes"><b>Where computer vision already works in sport:</b> track-limit checks in Formula 1, VAR offside lines in football, ball tracking and replay graphics, and analysis of how athletes move. The rest of this talk asks whether models can do the last one: recognise which stroke a player is hitting.</aside>
+</section>
+
+<section class="slide full" data-name="1 · In or out? Solved">
+  <figure class="media" data-id="wimbledon" data-src="media/inandout-1.mp4" data-label="In or out? · electronic line calling"></figure>
+  <div class="cap top">
+    <div class="kicker">In or out?</div>
+  </div>
+  <div class="cap">
+    <div class="timeline">
+      <div class="ev"><div class="y">2021</div><div class="w">Australian Open · all courts</div></div>
+      <div class="ev"><div class="y">2025</div><div class="w">Whole ATP Tour</div></div>
+      <div class="ev"><div class="y ball">2025</div><div class="w">Wimbledon · after 148 yrs</div></div>
+    </div>
+  </div>
+  <aside class="notes"><b>Why care, part 1:</b> computer vision already officiates tennis. Electronic line calling replaced line judges at the Australian Open in 2021, across the ATP Tour in 2025, and at Wimbledon in 2025. Whether the ball is in or out is a solved problem.</aside>
+</section>
+
+<section class="slide full" data-name="1 · In or out? Solved">
+  <figure class="media" data-id="wimbledon-2" data-src="media/inandout-2.mp4" data-label="In or out? · electronic line calling"></figure>
+  <div class="cap top">
+    <div class="kicker">In or out?</div>
+    <div><span class="stamp">SOLVED</span></div>
+  </div>
+  <div class="cap">
+    <div class="timeline">
+      <div class="ev"><div class="y">2021</div><div class="w">Australian Open · all courts</div></div>
+      <div class="ev"><div class="y">2025</div><div class="w">Whole ATP Tour</div></div>
+      <div class="ev"><div class="y ball">2025</div><div class="w">Wimbledon · after 148 yrs</div></div>
+    </div>
+  </div>
+  <aside class="notes"><b>Why care, part 1:</b> computer vision already officiates tennis. Electronic line calling replaced line judges at the Australian Open in 2021, across the ATP Tour in 2025, and at Wimbledon in 2025. Whether the ball is in or out is a solved problem.</aside>
+</section>
+
+<section class="slide trio" data-name="1 · Which serve? (the question)">
+  <div class="kicker">The question</div>
+  <h2>Can a model tell these <span class="ball">apart?</span></h2>
+  <div class="trio-row">
+    <div class="cell"><figure class="media contain" data-id="ex-flat" data-src="media/8c182b27.mp4" data-label="flat serve · p9_serflat_s1"></figure><div class="q">A</div></div>
+    <div class="cell"><figure class="media contain" data-id="ex-kick" data-src="media/e704d5ff.mp4" data-label="kick serve · p18_serkick_s2"></figure><div class="q">B</div></div>
+    <div class="cell"><figure class="media contain" data-id="ex-slice" data-src="media/17fbb268.mp4" data-label="slice serve · p36_serslice_s2"></figure><div class="q">C</div></div>
+  </div>
+  <aside class="notes"><b>The question:</b> can a model tell flat, slice and kick serves apart? Play the three clips and ask the room to name each. <b>Answer:</b> A = flat, B = kick, C = slice. <b>Why it matters:</b> the serve starts every point, and knowing which serve a player picks (on break point, out wide) is scouting. Today that tagging is done by hand.</aside>
+</section>
+
+<!-- ═════════════════════ 2 · PREDICTION ═════════════════════ -->
+<section class="slide divider" data-name="2 · Prediction">
+  <div class="num">02 · Prediction</div>
+  <h2>Shot type: <span class="ball">easy.</span><br>Serve type: <span style="color:var(--clay)">hard.</span></h2>
+  <div class="chips" style="margin-top:20px"><span class="chip">trained models <b>&gt;</b> frontier models</span></div>
+  <aside class="notes"><b>What we expected, before running it:</b> (1) Every model should tell a serve from a volley from a groundstroke, because the whole-body motion is very different. (2) Serve type should be hard, because flat, slice and kick differ mainly in racket angle and spin in a split second, and THETIS has no ball, so the spin is invisible. (3) Models trained on THETIS—including Pose CNN and X3D—should beat frontier models used zero-shot, while pose may be especially strong on body-defined motion and weak where racket or ball cues matter.</aside>
+</section>
+
+<!-- ═════════════════════ 3 · SETUP ═════════════════════ -->
+<section class="slide split" data-name="3 · Setup">
+  <div class="col" style="justify-content:center;gap:34px">
+    <div class="kicker">Frontier · zero-shot</div>
+    <h2 style="font-size:84px">Claude Opus 5.5<br>ChatGPT GPT-6<br>Gemini Hydrogen</h2>
+    <div class="chips"><span class="chip"><b>60</b> clips · 5 per class</span><span class="chip">filenames hidden</span></div>
+  </div>
+  <div class="col" style="justify-content:center;gap:34px;border-left:1.5px solid var(--line);padding-left:48px">
+    <div class="kicker">Trained</div>
+    <h2 style="font-size:70px">Pose CNN · MediaPipe<br>X3D · video<br>X3D · 3D skeleton</h2>
+    <div class="chips"><span class="chip">Pose CNN: same 60 clips</span><span class="chip">X3D: held-out sets</span></div>
+    <div class="cite">Dataset · THETIS — Gourgari, S., Goudelis, G., Karpouzis, K., &amp; Kollias, S. (2013). Thetis: Three-dimensional tennis shots a human action dataset. In <i>Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition Workshops</i> (pp. 676–681).</div>
+  </div>
+  <aside class="notes"><b>Data:</b> THETIS has 12 stroke classes recorded with Kinect and no visible ball. <b>Shared 60-clip set:</b> Claude Opus 5.5, ChatGPT GPT-6, Gemini Hydrogen and Pose CNN classify the same five clips per class. Pose CNN is a one-dimensional CNN trained on pose sequences extracted with MediaPipe Holistic. <b>X3D condition:</b> X3D RGB uses 396 held-out clips. X3D Skeleton 3D uses 250. <b>Measures:</b> exact class accuracy and broad category accuracy across groundstroke, volley, serve and overhead.</aside>
+</section>
+
+<!-- ═════════════════════ 4 · RESULTS ═════════════════════ -->
+<section class="slide" data-name="4 · Overall accuracy" style="gap:36px;padding:76px 120px 72px">
+  <div class="kicker">Results</div>
+  <h2 style="font-size:82px">Pose CNN reaches <span class="ball">68% exact</span> and 90% broad accuracy.</h2>
+  <div class="result-legend"><span><i></i>12-class accuracy</span><span class="broad"><i></i>4-category accuracy</span></div>
+  <div class="result-bars">
+    <div class="result-row"><div class="model">Pose CNN<small>trained pose · n=60</small></div><div class="pair-track"><span class="broad" style="width:90%"></span><span class="fine" style="width:68.3%"></span></div><div class="vals"><b>90%</b><br>68%</div></div>
+    <div class="result-row"><div class="model">X3D RGB<small>trained · n=396</small></div><div class="pair-track"><span class="broad" style="width:83.1%"></span><span class="fine" style="width:61.6%"></span></div><div class="vals"><b>83%</b><br>62%</div></div>
+    <div class="result-row"><div class="model">X3D Skeleton 3D<small>trained · n=250</small></div><div class="pair-track"><span class="broad" style="width:76%"></span><span class="fine" style="width:52.8%"></span></div><div class="vals"><b>76%</b><br>53%</div></div>
+    <div class="result-row"><div class="model">Claude Opus 5.5<small>frontier · n=60</small></div><div class="pair-track"><span class="broad" style="width:80%"></span><span class="fine" style="width:51.7%"></span></div><div class="vals"><b>80%</b><br>52%</div></div>
+    <div class="result-row"><div class="model">ChatGPT GPT-6<small>frontier · n=60</small></div><div class="pair-track"><span class="broad" style="width:86.7%"></span><span class="fine" style="width:36.7%"></span></div><div class="vals"><b>87%</b><br>37%</div></div>
+    <div class="result-row"><div class="model">Gemini Hydrogen<small>frontier · n=60</small></div><div class="pair-track"><span class="broad" style="width:71.7%"></span><span class="fine" style="width:26.7%"></span></div><div class="vals"><b>72%</b><br>27%</div></div>
+  </div>
+  <div class="cite">Pose CNN and frontier models share the same 60 clips. X3D models use separate held-out test sets.</div>
+  <aside class="notes">Pose CNN records the highest observed exact accuracy at 68% and broad accuracy at 90%. Its result is directly paired with the three frontier models because all four classify the same 60 clips. X3D RGB reaches 62% exact accuracy on a larger, separate test set. Broad accuracy remains higher than exact accuracy for every model.</aside>
+</section>
+
+<section class="slide" data-name="4 · Broad categories" style="gap:32px;padding:74px 120px 70px">
+  <div class="kicker">Broad category accuracy</div>
+  <h2 style="font-size:82px">Groundstrokes are stable. Volleys expose the <span class="ball">model split.</span></h2>
+  <div class="heatmap-wrap">
+    <div class="heatmap-copy"><div class="big-callout">100%</div><p>Pose CNN on groundstrokes and serves<br><span style="color:var(--clay)">60%</span> on volleys and overheads</p><div class="hm-scale"><span>0</span><span class="grad"></span><span>100%</span></div></div>
+    <div class="heatmap broad-map" id="broad-heatmap"></div>
+  </div>
+  <aside class="notes">Pose CNN gets all 30 groundstrokes and all 15 serves into the correct broad family. Its broad errors come from volleys and overheads. Across all models, groundstrokes remain the most reliable broad family. Claude still shows the sharpest category imbalance, with 97% on groundstrokes and 10% on volleys.</aside>
+</section>
+
+<section class="slide" data-name="4 · Class recall" style="gap:28px;padding:66px 120px 62px">
+  <div class="kicker">Exact class recall</div>
+  <h2 style="font-size:78px">Slice serve and flat serve challenge <span class="ball">every model.</span></h2>
+  <div class="heatmap class-map" id="class-heatmap" style="flex:1"></div>
+  <div class="cite">Outlined cells mark classes where every model remains below 50% recall. Frontier and Pose CNN results move in 20-point steps.</div>
+  <aside class="notes">Slice serve has the lowest equal-model mean recall at 17%. Flat serve follows at 33%. Every model stays below 50% recall on both. Pose CNN improves backhand volley to 80% and reaches 100% on backhand, two-hand backhand and forehand flat, but it does not solve the flat-versus-slice serve boundary.</aside>
+</section>
+
+<section class="slide" data-name="4 · Group confusion matrices" style="gap:26px;padding:66px 92px 58px">
+  <div class="kicker">Where predictions move</div>
+  <h2 style="font-size:75px">Both model families collapse the three serve types into one <span class="ball">cluster.</span></h2>
+  <div class="matrix-pair">
+    <div class="matrix-panel"><div class="matrix-title"><b>Frontier models</b><span>equal mean · row %</span></div><div class="conf-matrix" id="llm-matrix"></div></div>
+    <div class="matrix-panel"><div class="matrix-title"><b>Trained models</b><span>equal mean · row %</span></div><div class="conf-matrix" id="trained-matrix"></div></div>
+  </div>
+  <div class="mx-key">BH backhand · B2 two-hand backhand · BS backhand slice · BV backhand volley · FS flat serve · FF forehand flat · FO open stance · FH forehand slice · FV forehand volley · KS kick serve · SS slice serve · SM smash</div>
+  <aside class="notes">Each matrix averages row-normalized confusion matrices equally within the model family. This prevents the larger X3D RGB test set from dominating. The serve block is the strongest shared off-diagonal pattern. Frontier models add more side-of-body errors. Trained models add a forehand slice versus forehand volley confusion.</aside>
+</section>
+
+<section class="slide" data-name="4 · Hardest subtype pairs" style="gap:32px;padding:72px 120px 66px">
+  <div class="kicker">Hardest subtype pairs</div>
+  <h2 style="font-size:80px">Serve subtypes remain the two strongest <span class="ball">confusions.</span></h2>
+  <div class="result-legend"><span class="llm"><i></i>frontier mean</span><span class="trained"><i></i>trained mean</span></div>
+  <div class="pair-list">
+    <div class="pair-item"><div class="pair-name">Flat serve vs slice serve</div><div class="pair-bars"><div class="pair-line llm"><span style="width:80%"></span></div><div class="pair-line trained"><span style="width:49.6%"></span></div></div><div class="pair-values"><b>40.0%</b> frontier<br><b>24.8%</b> trained</div></div>
+    <div class="pair-item"><div class="pair-name">Kick serve vs slice serve</div><div class="pair-bars"><div class="pair-line llm"><span style="width:60%"></span></div><div class="pair-line trained"><span style="width:50%"></span></div></div><div class="pair-values"><b>30.0%</b> frontier<br><b>25.0%</b> trained</div></div>
+    <div class="pair-item"><div class="pair-name">Forehand slice vs volley</div><div class="pair-bars"><div class="pair-line llm"><span style="width:26.6%"></span></div><div class="pair-line trained"><span style="width:61.2%"></span></div></div><div class="pair-values"><b>13.3%</b> frontier<br><b>30.6%</b> trained</div></div>
+    <div class="pair-item"><div class="pair-name">Flat serve vs kick serve</div><div class="pair-bars"><div class="pair-line llm"><span style="width:26.6%"></span></div><div class="pair-line trained"><span style="width:56.6%"></span></div></div><div class="pair-values"><b>13.3%</b> frontier<br><b>28.3%</b> trained</div></div>
+    <div class="pair-item"><div class="pair-name">Backhand 2H vs forehand flat</div><div class="pair-bars"><div class="pair-line llm"><span style="width:46.6%"></span></div><div class="pair-line trained"><span style="width:13.6%"></span></div></div><div class="pair-values"><b>23.3%</b> frontier<br><b>6.8%</b> trained</div></div>
+  </div>
+  <aside class="notes">The pair metric averages the two directional error rates. Flat versus slice serve is the hardest pair overall at 32%. Kick versus slice follows at 27%. Adding Pose CNN raises the trained mean for flat versus slice because Pose confuses those classes in both directions. The largest trained non-serve confusion remains forehand slice versus forehand volley.</aside>
+</section>
+
+<section class="slide" data-name="4 · Shared frontier failures" style="gap:34px;padding:72px 120px 72px">
+  <div class="kicker">Pose CNN recovery</div>
+  <h2 style="font-size:80px">Pose CNN recovers <span class="ball">7 of 15</span> shared frontier failures.</h2>
+  <div class="shared-layout">
+    <div class="shared-stats">
+      <div class="shared-stat"><div class="v">7/15</div><div class="k">shared exact failures recovered</div></div>
+      <div class="shared-stat"><div class="v">2/4</div><div class="k">shared broad failures recovered</div></div>
+    </div>
+    <div class="shared-classes">
+      <div class="shared-class"><div class="nm">Backhand volley</div><div class="track pose"><span style="width:75%"></span></div><div class="v">3/4</div></div>
+      <div class="shared-class"><div class="nm">Forehand slice</div><div class="track pose"><span style="width:100%"></span></div><div class="v">1/1</div></div>
+      <div class="shared-class"><div class="nm">Forehand volley</div><div class="track pose"><span style="width:50%"></span></div><div class="v">1/2</div></div>
+      <div class="shared-class"><div class="nm">Kick serve + smash</div><div class="track pose"><span style="width:100%"></span></div><div class="v">2/2</div></div>
+      <div class="shared-class"><div class="nm">Slice serve</div><div class="track pose"><span style="width:0%"></span></div><div class="v">0/4</div></div>
+      <div class="shared-note"><b>Pose helps on body-defined strokes.</b><br>It does not recover any shared slice-serve failure.</div>
+    </div>
+  </div>
+  <aside class="notes">The three frontier models share 15 exact-class failures. Pose CNN correctly classifies seven of those same clips. It recovers three of four backhand-volley failures and the shared failures in forehand slice, kick serve and smash. It recovers none of the four shared slice-serve failures, reinforcing the conclusion that pose alone does not resolve that subtype.</aside>
+</section>
+
+<section class="slide split" data-name="4 · Example · slice serve">
+  <div class="col" style="flex:1.4"><figure class="media contain" data-id="r-ex1" data-src="media/18f89afa.mp4" data-label="slice serve · p18_serslice_s3"></figure></div>
+  <div class="col" style="justify-content:center;gap:30px">
+    <div class="kicker">Truth: slice serve</div>
+    <div class="preds">
+      <div class="p"><span class="m">Claude</span><span class="v no">flat serve</span></div>
+      <div class="p"><span class="m">ChatGPT</span><span class="v no">flat serve</span></div>
+      <div class="p"><span class="m">Gemini</span><span class="v no">forehand</span></div>
+      <div class="p"><span class="m">Pose CNN</span><span class="v no">flat serve</span></div>
+    </div>
+  </div>
+  <aside class="notes">Slice serve remains the hardest class across all six models. Pose CNN also classifies this clip as flat serve and reaches only 1 of 5 on slice serve overall. Across model families, slice serve moves mainly toward flat serve or kick serve.</aside>
+</section>
+
+<section class="slide split" data-name="4 · Example · smash">
+  <div class="col" style="flex:1.4"><figure class="media contain" data-id="r-ex2" data-src="media/bbd13102.mp4" data-label="smash · p45_smash_s2"></figure></div>
+  <div class="col" style="justify-content:center;gap:30px">
+    <div class="kicker">Truth: smash</div>
+    <div class="preds">
+      <div class="p"><span class="m">Claude</span><span class="v no">flat serve</span></div>
+      <div class="p"><span class="m">ChatGPT</span><span class="v no">slice serve</span></div>
+      <div class="p"><span class="m">Gemini</span><span class="v no">flat serve</span></div>
+      <div class="p"><span class="m">Pose CNN</span><span class="v ok">smash</span></div>
+    </div>
+  </div>
+  <aside class="notes">All three frontier models classify this smash as a serve, while Pose CNN identifies the smash correctly. Pose recovers this shared frontier failure, although two other smash clips still move into flat serve or kick serve.</aside>
+</section>
+
+<!-- ═════════════════════ 5 · LIMITS ═════════════════════ -->
+<section class="slide" data-name="5 · Limits" style="justify-content:center;gap:56px">
+  <div class="kicker">Limits</div>
+  <div class="limits">
+    <div class="li"><div class="b">5</div><div class="t">clips per class</div></div>
+    <div class="li"><div class="b">≠</div><div class="t">test sets</div></div>
+    <div class="li"><div class="b">0</div><div class="t">balls in THETIS</div></div>
+    <div class="li"><div class="b">1</div><div class="t">prompt, one run</div></div>
+  </div>
+  <aside class="notes"><b>Small shared-set sample:</b> Pose CNN and each frontier model use five clips per class, so one clip changes class recall by 20 points. <b>Different test sets:</b> X3D RGB uses 396 clips and X3D Skeleton 3D uses 250; direct ranking across those evaluations is not controlled. The comparison supports pattern analysis more strongly than precise ranking. <b>Missing cue:</b> THETIS contains no visible ball, so spin, trajectory and bounce are unavailable. <b>Single run:</b> the frontier evaluation uses one prompt and one run per model.</aside>
+</section>
+
+<!-- ═════════════════════ 6 · WHAT IT MEANS ═════════════════════ -->
+<section class="slide split" data-name="6 · What it means">
+  <div class="col" style="justify-content:center;gap:28px">
+    <div class="kicker">What the results support</div>
+    <h2>Body motion finds the <span class="ball">shot family.</span></h2>
+  </div>
+  <div class="col" style="justify-content:center;gap:28px;border-left:1.5px solid var(--line);padding-left:48px">
+    <div class="kicker">What to test next</div>
+    <h2>Ball flight is the next test for <span class="ball">serve types.</span></h2>
+  </div>
+  <aside class="notes"><b>Supported conclusion:</b> every model performs better on broad category than on exact subtype. Pose CNN's 90% broad accuracy and recovery of seven shared frontier failures strengthen the evidence that body motion is sufficient for the shot family. Serve subtypes remain the most consistent shared confusion. <b>Hypothesis:</b> the missing ball removes cues that distinguish flat, kick and slice serves. <b>Next experiment:</b> use synthetic or captured clips with visible ball flight and controlled spin, then compare the same models with and without the ball cue.</aside>
+</section>
+
+<section class="slide prototype" data-name="7 · Unity proof of concept">
+  <div class="kicker">Next phase · Unity proof of concept</div>
+  <h2>THETIS serves now replay from new <span class="ball">camera angles.</span></h2>
+  <div class="prototype-row">
+    <div class="prototype-item">
+      <div class="prototype-label"><b>Player 19 · beginner</b><span class="miss">all three serves misclassified</span></div>
+      <figure class="media contain" data-id="unity-p19" data-src="media/tennis_serves_p19_all_wrong.mp4" data-label="Unity reconstruction · Player 19"></figure>
+    </div>
+    <div class="prototype-item">
+      <div class="prototype-label"><b>Player 36 · expert</b><span class="hit">all three serves correct</span></div>
+      <figure class="media contain" data-id="unity-p36" data-src="media/tennis_serves_p36_all_right.mp4" data-label="Unity reconstruction · Player 36"></figure>
+    </div>
+  </div>
+  <div class="cite">MediaPipe Holistic 3D reconstructed in Unity. Prototype only; no retraining results yet.</div>
+  <aside class="notes"><b>Proof of concept:</b> we extracted MediaPipe Holistic 3D landmarks from difficult THETIS serves and replayed the motion in Unity. The left clip shows Player 19, whose flat, kick and slice serves the Pose CNN misclassified. The right shows Player 36, whose three serves it classified correctly. Each sequence appears from the front, side and a three-quarter overhead view. <b>What this establishes:</b> we can carry real THETIS motion into a controllable 3D environment and inspect the same serve from viewpoints the original dataset does not provide. <b>Current limit:</b> time constraints prevented us from generating enough Unity data to retrain the models or measure improvement. <b>Next phase:</b> vary camera angle systematically, add controlled ball flight and spin, then export labeled sequences for training and targeted evaluation of the failure cases.</aside>
+</section>
+
+<section class="slide title" data-name="Thanks">
+  <div class="kicker">Next: more viewpoints and ball flight</div>
+  <h1>Thank <span class="ball">you.</span></h1>
+</section>
+
+</div></div>
+
+<div id="ov"></div>
+<div id="notes"></div>
+<div id="bar"></div>
+<div id="count"></div>
+<div id="toast"></div>
+<div id="nav">
+  <button data-a="prev">←</button><button data-a="ov">Overview (O)</button><button data-a="notes">Notes (N)</button><button data-a="fs">Fullscreen (F)</button><button data-a="next">→</button>
+</div>
+<input type="file" id="picker" accept="image/*,video/*" hidden>
+
+<script>
+(() => {
+  const stage = document.getElementById('stage');
+  const slides = [...document.querySelectorAll('.slide')];
+  let cur = 0;
+
+  /* ---------- scale 1920×1080 stage to window ---------- */
+  function fit(){
+    const s = Math.min(innerWidth/1920, innerHeight/1080);
+    stage.style.transform = `translate(-50%,-50%) scale(${s})`;
+  }
+  addEventListener('resize', fit); fit();
+
+  /* ---------- toast ---------- */
+  const toastEl = document.getElementById('toast'); let tt;
+  function toast(m){ toastEl.textContent=m; toastEl.style.opacity=1; clearTimeout(tt); tt=setTimeout(()=>toastEl.style.opacity=0,1800); }
+
+  /* ---------- YouTube mode: inline when opened directly, link-out when sandboxed ---------- */
+  let framed = false; try { framed = window.self !== window.top; } catch(e){ framed = true; }
+  let ytInline = !framed;
+  try { const v = localStorage.getItem('deck-yt-inline'); if (v !== null) ytInline = v === '1'; } catch(e){}
+
+  /* ---------- IndexedDB for dropped media ---------- */
+  let dbp = null;
+  function db(){
+    if (dbp) return dbp;
+    dbp = new Promise((res) => {
+      try {
+        const r = indexedDB.open('serve-deck-media', 1);
+        let settled = false;
+        const done = value => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          res(value);
+        };
+        const timer = setTimeout(() => done(null), 800);
+        r.onupgradeneeded = () => r.result.createObjectStore('m');
+        r.onsuccess = () => done(r.result);
+        r.onerror = () => done(null);
+        r.onblocked = () => done(null);
+      } catch(e){ res(null); }
+    });
+    return dbp;
+  }
+  async function idb(op, key, val){
+    const d = await db(); if (!d) return null;
+    return new Promise((res) => {
+      try {
+        const tx = d.transaction('m', op==='get'?'readonly':'readwrite');
+        const st = tx.objectStore('m');
+        const rq = op==='get' ? st.get(key) : op==='put' ? st.put(val, key) : st.delete(key);
+        rq.onsuccess = () => res(rq.result ?? null);
+        rq.onerror = () => res(null);
+      } catch(e){ res(null); }
+    });
+  }
+
+  /* ---------- media slots ---------- */
+  const ICON_IMG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5-9 8"/></svg>';
+  const ICON_VID = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="14" height="14" rx="2"/><path d="M17 10l4-2v8l-4-2z"/></svg>';
+  const PLAY = '<svg viewBox="0 0 24 24"><path d="M6 4l15 8-15 8z" fill="#0a0a0b"/></svg>';
+  const isVid = s => /\.(mp4|webm|mov|m4v)$/i.test(s||'');
+
+  function clearSlot(fig){ fig.querySelectorAll(':scope > :not(figcaption)').forEach(n=>n.remove()); }
+
+  function placeholder(fig){
+    clearSlot(fig);
+    const vid = isVid(fig.dataset.src);
+    const ph = document.createElement('div'); ph.className='ph';
+    ph.innerHTML = (vid?ICON_VID:ICON_IMG) + `<div class="l">${fig.dataset.label||'Media'}</div><div class="h">drag a file here · or click</div>`;
+    ph.onclick = () => pick(fig);
+    fig.appendChild(ph);
+  }
+
+  function showFile(fig, url, video){
+    clearSlot(fig);
+    let el;
+    if (video){ el=document.createElement('video'); el.src=url; el.muted=true; el.loop=true; el.playsInline=true; el.controls=false; el.onclick=()=>{ el.muted=!el.muted; toast(el.muted?'muted':'sound on'); }; }
+    else { el=document.createElement('img'); el.src=url; el.alt=fig.dataset.label||''; }
+    fig.appendChild(el);
+    if (video && fig.closest('.slide')===slides[cur]) el.play().catch(()=>{});
+    return el;
+  }
+
+  function addClear(fig){
+    const b=document.createElement('button'); b.className='clear'; b.title='Remove dropped file'; b.textContent='✕';
+    b.onclick = async (e)=>{ e.stopPropagation(); await idb('del', fig.dataset.id); render(fig); toast('cleared'); };
+    fig.appendChild(b);
+  }
+
+  function ytFacade(fig){
+    clearSlot(fig);
+    const id = fig.dataset.yt, url = `https://www.youtube.com/watch?v=${id}`;
+    const title = fig.dataset.title || 'Video';
+    if (ytInline){
+      const d=document.createElement('div'); d.className='yt';
+      d.innerHTML = `<div class="play">${PLAY}</div><div class="t">${title}</div>`;
+      d.onclick = () => {
+        clearSlot(fig);
+        const f=document.createElement('iframe');
+        f.src=`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+        f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen=true;
+        fig.appendChild(f);
+        const a=document.createElement('a'); a.className='yt-link'; a.href=url; a.target='_blank'; a.rel='noopener'; a.textContent='open on YouTube ↗';
+        fig.appendChild(a);
+      };
+      fig.appendChild(d);
+    } else {
+      const a=document.createElement('a'); a.className='yt'; a.href=url; a.target='_blank'; a.rel='noopener';
+      a.innerHTML = `<div class="play">${PLAY}</div><div class="t">${title}</div><div class="ext">opens YouTube ↗</div>`;
+      fig.appendChild(a);
+    }
+  }
+
+  function renderBundled(fig){
+    if (fig.dataset.yt){ ytFacade(fig); return; }
+    if (fig.dataset.src){
+      const video = isVid(fig.dataset.src);
+      const el = showFile(fig, fig.dataset.src, video);
+      el.addEventListener('error', () => placeholder(fig), {once:true});
+      return;
+    }
+    placeholder(fig);
+  }
+
+  async function render(fig){
+    // Do not make bundled media depend on browser storage. IndexedDB can be
+    // unavailable or remain blocked when this deck is opened as a local file
+    // or inside a presentation preview.
+    renderBundled(fig);
+    const stored = await idb('get', fig.dataset.id);
+    if (stored && stored.blob){
+      showFile(fig, URL.createObjectURL(stored.blob), stored.type.startsWith('video'));
+      addClear(fig);
+    }
+  }
+
+  async function storeFile(fig, file){
+    if (!file || !/^(image|video)\//.test(file.type)) { toast('drop an image or video'); return; }
+    const ok = await idb('put', fig.dataset.id, {blob:file, type:file.type, name:file.name});
+    showFile(fig, URL.createObjectURL(file), file.type.startsWith('video'));
+    addClear(fig);
+    toast(ok===null && !(await db()) ? 'placed (not saved — storage unavailable)' : 'placed ✓ saved in this browser');
+  }
+
+  let pickTarget=null; const picker=document.getElementById('picker');
+  function pick(fig){ pickTarget=fig; picker.value=''; picker.click(); }
+  picker.onchange = () => { if (pickTarget && picker.files[0]) storeFile(pickTarget, picker.files[0]); };
+
+  document.querySelectorAll('.media').forEach(fig => {
+    fig.addEventListener('dragover', e => { e.preventDefault(); fig.classList.add('drag'); });
+    fig.addEventListener('dragleave', () => fig.classList.remove('drag'));
+    fig.addEventListener('drop', e => { e.preventDefault(); fig.classList.remove('drag'); storeFile(fig, e.dataTransfer.files[0]); });
+    render(fig);
+  });
+  addEventListener('dragover', e => e.preventDefault());
+  addEventListener('drop', e => e.preventDefault());
+
+  /* ---------- native analysis charts ---------- */
+  const broadRows = [
+    ['Claude Opus 5.5','frontier',[.967,.10,1,.60]],
+    ['ChatGPT GPT-6','frontier',[.90,.70,.933,.80]],
+    ['Gemini Hydrogen','frontier',[.867,.50,.733,.20]],
+    ['Pose CNN','trained pose',[1,.60,1,.60]],
+    ['X3D RGB','trained',[.909,.636,.848,.697]],
+    ['X3D Skeleton 3D','trained',[.838,.643,.80,.333]]
+  ];
+  const classRows = [
+    ['Backhand',[1,.00,.20,1,.697,.652]],
+    ['Backhand 2H',[1,.60,.40,1,.818,.70]],
+    ['Backhand slice',[.60,.60,.00,.60,.515,.591]],
+    ['Backhand volley',[.00,.20,.00,.80,.697,.636]],
+    ['Flat serve',[.40,.40,.20,.20,.485,.286],true],
+    ['Forehand flat',[.60,.20,.40,1,.788,.652]],
+    ['Forehand open stance',[.60,.20,.40,.80,.909,.864]],
+    ['Forehand slice',[.60,.20,.40,.80,.727,.30]],
+    ['Forehand volley',[.20,.60,.20,.40,.515,.45]],
+    ['Kick serve',[.60,.40,.60,.80,.333,.524]],
+    ['Slice serve',[.00,.20,.20,.20,.212,.222],true],
+    ['Smash',[.60,.80,.20,.60,.697,.333]]
+  ];
+  const classHeads = ['Claude','ChatGPT','Gemini','Pose CNN','X3D RGB','X3D skeleton'];
+  function pct(v){ return Math.round(v*100)+'%'; }
+  function hmStyle(v){
+    const low = v < .4;
+    const alpha = low ? (.10 + (.4-v)*.70) : (.12 + v*.72);
+    const bg = low ? `rgba(226,115,74,${alpha})` : `rgba(220,255,74,${alpha})`;
+    const color = (!low && v >= .65) ? '#111' : '#f3f0e8';
+    return `background:${bg};color:${color}`;
+  }
+  const broadEl = document.getElementById('broad-heatmap');
+  if (broadEl){
+    broadEl.insertAdjacentHTML('beforeend','<div></div>'+['Groundstroke','Volley','Serve','Overhead'].map(x=>`<div class="hm-head">${x}</div>`).join(''));
+    broadRows.forEach(([name,group,vals])=>{
+      broadEl.insertAdjacentHTML('beforeend',`<div class="hm-label"><div>${name}<small>${group}</small></div></div>`+vals.map(v=>`<div class="hm-cell" style="${hmStyle(v)}">${pct(v)}</div>`).join(''));
+    });
+  }
+  const classEl = document.getElementById('class-heatmap');
+  if (classEl){
+    classEl.insertAdjacentHTML('beforeend','<div></div>'+classHeads.map(x=>`<div class="hm-head">${x}</div>`).join(''));
+    classRows.forEach(([name,vals,hard])=>{
+      classEl.insertAdjacentHTML('beforeend',`<div class="hm-label">${name}</div>`+vals.map(v=>`<div class="hm-cell${hard?' hard':''}" style="${hmStyle(v)}">${pct(v)}</div>`).join(''));
+    });
+  }
+
+  const mxLabels = ['BH','B2','BS','BV','FS','FF','FO','FH','FV','KS','SS','SM'];
+  const llmMx = [
+    [.400,0,0,.133,0,.133,.200,.133,0,0,0,0],
+    [0,.667,0,0,0,.267,0,.067,0,0,0,0],
+    [.200,0,.400,0,0,.067,.067,.267,0,0,0,0],
+    [.133,0,.333,.067,0,0,0,.200,.267,0,0,0],
+    [.067,0,0,0,.333,0,0,0,0,.133,.400,.067],
+    [.067,.200,0,0,.067,.400,.267,0,0,0,0,0],
+    [.200,.133,0,.067,.067,.067,.400,0,0,0,0,.067],
+    [.133,0,0,.067,0,.267,.067,.400,.067,0,0,0],
+    [0,0,.067,.200,0,.133,.067,.200,.333,0,0,0],
+    [0,0,0,0,.133,0,0,0,0,.533,.267,.067],
+    [0,0,0,0,.400,0,.067,0,0,.333,.133,.067],
+    [0,0,0,.067,.200,0,.067,0,0,.067,.067,.533]
+  ];
+  const trainedMx = [
+    [.783,.010,.014,0,0,.025,.100,0,0,.029,0,.039],
+    [.017,.839,0,.017,0,.033,.077,0,0,0,0,.017],
+    [.179,.030,.569,.101,0,.030,.010,.061,.020,0,0,0],
+    [.010,.030,.142,.711,0,.015,0,.035,.040,0,0,.015],
+    [.032,0,0,0,.324,0,.010,0,0,.345,.205,.084],
+    [0,.103,.010,.010,0,.813,0,.020,0,0,0,.043],
+    [0,.045,0,0,0,.097,.858,0,0,0,0,0],
+    [0,.033,0,.033,0,.120,0,.609,.204,0,0,0],
+    [.017,.050,0,.043,0,.010,0,.408,.455,.017,0,0],
+    [0,0,0,0,.220,0,.010,0,0,.552,.176,.042],
+    [.019,0,0,0,.290,0,.039,0,0,.324,.211,.118],
+    [.019,.019,.019,0,.136,.010,0,0,0,.227,.029,.543]
+  ];
+  function renderMatrix(id,data){
+    const el=document.getElementById(id); if(!el)return;
+    el.insertAdjacentHTML('beforeend','<div></div>'+mxLabels.map(x=>`<div class="mx-head">${x}</div>`).join(''));
+    data.forEach((row,r)=>{
+      el.insertAdjacentHTML('beforeend',`<div class="mx-label">${mxLabels[r]}</div>`);
+      row.forEach((v,c)=>{
+        const diag=r===c;
+        const alpha=diag ? (.10+v*.88) : Math.min(.86,.04+v*1.85);
+        const bg=diag ? `rgba(220,255,74,${alpha})` : `rgba(226,115,74,${alpha})`;
+        const color=diag && v>.48 ? '#111' : '#f3f0e8';
+        const label=(diag || v>=.10) ? Math.round(v*100) : '';
+        el.insertAdjacentHTML('beforeend',`<div class="mx-cell${diag?' diag':''}" style="background:${bg};color:${color}">${label}</div>`);
+      });
+    });
+  }
+  renderMatrix('llm-matrix',llmMx);
+  renderMatrix('trained-matrix',trainedMx);
+
+  /* ---------- navigation ---------- */
+  const notesEl=document.getElementById('notes'), bar=document.getElementById('bar'), count=document.getElementById('count');
+  function slug(i){ return 'slide-' + (i+1); }
+
+  function go(i, fromHash){
+    i = Math.max(0, Math.min(slides.length-1, i));
+    const prev = slides[cur];
+    if (prev && i!==cur){
+      prev.querySelectorAll('video').forEach(v=>v.pause());
+      prev.querySelectorAll('.media iframe').forEach(f=>render(f.closest('.media'))); // stop YouTube
+    }
+    slides.forEach((s,k)=>s.classList.toggle('active', k===i));
+    cur = i;
+    slides[i].querySelectorAll('video').forEach(v=>v.play().catch(()=>{}));
+    bar.style.width = ((i+1)/slides.length*100)+'%';
+    count.textContent = `${i+1} / ${slides.length}`;
+    const n = slides[i].querySelector('.notes');
+    notesEl.innerHTML = `<b>${i+1}. ${slides[i].dataset.name||''}</b><br>` + (n ? n.innerHTML : '<i>No notes.</i>');
+    if (!fromHash){ try { history.replaceState(null,'','#'+slug(i)); } catch(e){ location.hash = slug(i); } }
+    document.querySelectorAll('#ov .th').forEach((t,k)=>t.classList.toggle('cur',k===i));
+  }
+  function fromHash(){ const m=/^#slide-(\d+)$/.exec(location.hash); return m ? (+m[1]-1) : 0; }
+  addEventListener('hashchange', () => go(fromHash(), true));
+
+  /* overview */
+  const ov=document.getElementById('ov');
+  slides.forEach((s,k)=>{
+    const t=document.createElement('div'); t.className='th';
+    t.innerHTML=`<div class="i">${String(k+1).padStart(2,'0')}</div><div class="tt">${s.dataset.name||''}</div>`;
+    t.onclick=()=>{ document.body.classList.remove('overview'); go(k); };
+    ov.appendChild(t);
+  });
+  function toggleOv(){ document.body.classList.toggle('overview'); }
+
+  /* tiles jump */
+  document.querySelectorAll('[data-goto]').forEach(t=>t.onclick=()=>{
+    const k=slides.findIndex(s=>s.dataset.name===t.dataset.goto); if(k>=0) go(k);
+  });
+
+  function fs(){
+    try {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>toast('fullscreen not allowed here'));
+      else document.exitFullscreen();
+    } catch(e){ toast('fullscreen not allowed here'); }
+  }
+
+  addEventListener('keydown', e => {
+    if (e.target.tagName==='INPUT') return;
+    const k=e.key;
+    if (['ArrowRight','PageDown',' ','Enter'].includes(k)){ e.preventDefault(); go(cur+1); }
+    else if (['ArrowLeft','PageUp','Backspace'].includes(k)){ e.preventDefault(); go(cur-1); }
+    else if (k==='Home') go(0);
+    else if (k==='End') go(slides.length-1);
+    else if (k==='o'||k==='O'||k==='Escape' && document.body.classList.contains('overview')) toggleOv();
+    else if (k==='n'||k==='N') notesEl.classList.toggle('on');
+    else if (k==='f'||k==='F') fs();
+    else if (k==='e'||k==='E'){
+      ytInline=!ytInline; try{localStorage.setItem('deck-yt-inline', ytInline?'1':'0');}catch(_){}
+      document.querySelectorAll('.media[data-yt]').forEach(render);
+      toast(ytInline ? 'YouTube: play inside slide' : 'YouTube: open in new tab');
+    }
+  });
+
+  document.getElementById('nav').addEventListener('click', e=>{
+    const a=e.target.dataset.a;
+    if(a==='prev')go(cur-1); else if(a==='next')go(cur+1); else if(a==='ov')toggleOv(); else if(a==='notes')notesEl.classList.toggle('on'); else if(a==='fs')fs();
+  });
+
+  go(fromHash(), true);
+})();
+</script>
+</body>
+</html>
