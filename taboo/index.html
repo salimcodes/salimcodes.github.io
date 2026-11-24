@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AfriTaboo · Share a Taboo</title>
+  <meta name="description" content="Help build a person-sourced benchmark of African cultural taboos. Share taboos from your culture in your own words." />
+  <meta name="robots" content="noindex" />
+  <meta property="og:title" content="AfriTaboo · Share a taboo from your culture" />
+  <meta property="og:description" content="A research study on how well AI understands African cultures. Takes about 10 minutes." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23b4532a'/%3E%3Cpath d='M18 46 32 16l14 30M23 36h18' stroke='%23fff' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip" href="#main" data-i18n="skip">Skip to form</a>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">A</span>
+        <div>
+          <div class="brand-name">AfriTaboo</div>
+          <div class="brand-sub" data-i18n="phase">Phase 1 · Elicitation</div>
+        </div>
+      </div>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="fr" aria-pressed="false">FR</button>
+      </div>
+    </div>
+    <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
+  </header>
+
+  <div id="testBanner" class="banner" hidden>
+    <div class="wrap" data-i18n-html="testMode"></div>
+  </div>
+  <div id="outboxBanner" class="banner banner-warn" hidden>
+    <div class="wrap"><span id="outboxText"></span> <button type="button" class="linkbtn" id="retryOutbox" data-i18n="retryNow">Retry now</button></div>
+  </div>
+
+  <main id="main" class="wrap">
+    <ol class="steps" id="stepNav" aria-label="Progress">
+      <li data-step="0"><span>1</span><em data-i18n="navWelcome">Welcome</em></li>
+      <li data-step="1"><span>2</span><em data-i18n="navProfile">About you</em></li>
+      <li data-step="2"><span>3</span><em data-i18n="navTaboos">Your taboos</em></li>
+      <li data-step="3"><span>4</span><em data-i18n="navReview">Review</em></li>
+    </ol>
+
+    <!-- ============ STEP 0: WELCOME + CONSENT ============ -->
+    <section class="step" data-step="0" id="step0">
+      <h1 data-i18n="welcomeTitle">What is not done where you come from?</h1>
+      <p class="lede" data-i18n="welcomeLede">Every culture has things you simply do not do. We are building a research benchmark of African taboos, written by the people who live with them, to test whether AI systems really understand African cultures.</p>
+
+      <div class="facts">
+        <div><strong data-i18n="factTimeV">≈ 10 min</strong><span data-i18n="factTime">to share 3–5 taboos</span></div>
+        <div><strong data-i18n="factAnonV">Anonymous</strong><span data-i18n="factAnon">no name or email collected</span></div>
+        <div><strong data-i18n="factLangV">Any language</strong><span data-i18n="factLang">or mix of languages</span></div>
+      </div>
+      <p class="counter" id="publicCount" hidden></p>
+
+      <div id="returning" class="card card-soft" hidden>
+        <h2 class="h3" data-i18n="welcomeBack">Welcome back</h2>
+        <p><span data-i18n="welcomeBackText">This device remembers you as participant</span> <code class="uid" id="returningId"></code>. <span data-i18n="welcomeBackText2">Your earlier answers about yourself are filled in; you can go straight to adding more taboos.</span></p>
+        <div class="row">
+          <button type="button" class="btn" id="continueReturning" data-i18n="continueAs">Continue with this ID</button>
+          <button type="button" class="btn btn-ghost" id="startFresh" data-i18n="notMe">I'm someone else</button>
+        </div>
+      </div>
+
+      <details class="card info">
+        <summary data-i18n="infoSummary">About this study (please read)</summary>
+        <div class="info-body" data-i18n-html="infoBody"></div>
+        <p class="muted" id="contactLine" hidden></p>
+      </details>
+
+      <form id="consentForm" class="card" novalidate>
+        <h2 class="h3" data-i18n="consentTitle">Consent</h2>
+        <label class="check"><input type="checkbox" name="c_age" required /> <span data-i18n="consentAge">I am 18 or older.</span></label>
+        <label class="check"><input type="checkbox" name="c_read" required /> <span data-i18n="consentRead">I have read the information about this study and agree to take part voluntarily.</span></label>
+        <label class="check"><input type="checkbox" name="c_sensitive" required /> <span data-i18n="consentSensitive">I understand that taboos can involve sensitive topics (death, religion, sexuality) and that I can skip anything or stop at any time.</span></label>
+        <label class="check"><input type="checkbox" name="c_share" required /> <span data-i18n="consentShare">I agree that the taboos I write (not my identity) may be published as part of an open research dataset.</span></label>
+
+        <details class="mini">
+          <summary data-i18n="haveId">I already have a participant ID</summary>
+          <div class="field">
+            <label for="existingId" data-i18n="haveIdLabel">Enter your ID (e.g. AT-7K3M-Q9)</label>
+            <input id="existingId" type="text" autocomplete="off" spellcheck="false" placeholder="AT-XXXX-XX" />
+          </div>
+        </details>
+        <p class="error" id="consentError" hidden data-i18n="consentError">Please tick all four boxes to continue.</p>
+        <div class="actions">
+          <button type="submit" class="btn btn-lg" data-i18n="begin">I agree, let's begin</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ============ STEP 1: PROFILE ============ -->
+    <section class="step" data-step="1" id="step1" hidden>
+      <h1 data-i18n="profileTitle">About you</h1>
+      <p class="lede" data-i18n="profileLede">This tells us whose culture each taboo comes from. A key question in our research is whether taboos follow countries, ethnic groups, languages, or religions, so these details matter. You answer them only once.</p>
+
+      <div class="idcard">
+        <div>
+          <div class="idcard-label" data-i18n="yourId">Your participant ID</div>
+          <code class="uid uid-lg" id="uidDisplay"></code>
+        </div>
+        <button type="button" class="btn btn-ghost btn-sm" id="copyId" data-i18n="copy">Copy</button>
+        <p class="idcard-note" data-i18n="idNote">Save this. It links your answers in this phase to the next phase, and lets you withdraw your data later. It is not connected to your name.</p>
+      </div>
+
+      <form id="profileForm" class="card" novalidate>
+        <fieldset>
+          <legend data-i18n="secCulture">Culture & origin</legend>
+
+          <div class="field">
+            <label for="country"><span data-i18n="country">Which country's culture do you most identify with?</span> <b class="req">*</b></label>
+            <select id="country" name="country" required></select>
+            <p class="hint" data-i18n="countryHint">The country whose customs you grew up with, even if you live elsewhere now.</p>
+            <input id="countryOther" name="country_other" type="text" class="mt" hidden data-i18n-ph="countryOtherPh" placeholder="Please specify" />
+          </div>
+
+          <div class="field">
+            <label for="residence" data-i18n="residence">Where do you live now?</label>
+            <select id="residence" name="residence"></select>
+            <input id="residenceOther" name="residence_other" type="text" class="mt" hidden data-i18n-ph="residenceOtherPh" placeholder="Country" />
+          </div>
+
+          <div class="field">
+            <label data-i18n="yearsIn">How much of your life have you lived in that country?</label>
+            <div class="pills" data-name="years_in_country">
+              <label><input type="radio" name="years_in_country" value="all_most" /><span data-i18n="yearsAll">All or most</span></label>
+              <label><input type="radio" name="years_in_country" value="about_half" /><span data-i18n="yearsHalf">About half</span></label>
+              <label><input type="radio" name="years_in_country" value="less_half" /><span data-i18n="yearsLess">Less than half</span></label>
+              <label><input type="radio" name="years_in_country" value="never" /><span data-i18n="yearsNever">Never lived there (diaspora)</span></label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="ethnicInput"><span data-i18n="ethnic">Ethnic group(s)</span> <b class="req">*</b></label>
+            <div class="tags" id="ethnicTags" data-name="ethnic_groups">
+              <div class="tag-list"></div>
+              <input id="ethnicInput" type="text" list="ethnicList" autocomplete="off" data-i18n-ph="ethnicPh" placeholder="Start typing, press Enter to add" />
+              <datalist id="ethnicList"></datalist>
+            </div>
+            <p class="hint" data-i18n="ethnicHint">Add more than one if you have mixed heritage. You can be specific (e.g. a sub-group or clan) or general.</p>
+            <label class="check check-sm"><input type="checkbox" id="ethnicPreferNot" name="ethnic_prefer_not" /> <span data-i18n="preferNot">Prefer not to say</span></label>
+          </div>
+
+          <div class="field">
+            <label for="langInput"><span data-i18n="languages">Language(s) you speak</span> <b class="req">*</b></label>
+            <div class="tags" id="langTags" data-name="languages">
+              <div class="tag-list"></div>
+              <input id="langInput" type="text" list="langList" autocomplete="off" data-i18n-ph="langPh" placeholder="Start typing, press Enter to add" />
+              <datalist id="langList"></datalist>
+            </div>
+            <p class="hint" data-i18n="langHint">Put your first language (mother tongue) first. Drag isn't needed: click a language to make it first.</p>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend data-i18n="secReligion">Religion</legend>
+          <div class="field">
+            <label><span data-i18n="religion">Religion(s) you practise or identify with</span> <b class="req">*</b></label>
+            <div class="checkgrid" id="religionGrid"></div>
+            <input id="religionDetail" name="religion_detail" type="text" class="mt" data-i18n-ph="religionDetailPh" placeholder="Optional: denomination, order, or tradition" />
+          </div>
+          <div class="field">
+            <label for="religionRaised" data-i18n="religionRaised">Religion you were raised in, if different</label>
+            <select id="religionRaised" name="religion_raised"></select>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><span data-i18n="secOptional">A little more (optional)</span></legend>
+          <div class="grid2">
+            <div class="field">
+              <label for="region" data-i18n="region">Region, state, or town you grew up in</label>
+              <input id="region" name="region" type="text" autocomplete="off" data-i18n-ph="regionPh" placeholder="e.g. a state, province, or town" />
+            </div>
+            <div class="field">
+              <label for="ageBand" data-i18n="age">Age</label>
+              <select id="ageBand" name="age_band">
+                <option value=""></option>
+                <option value="18-24">18–24</option>
+                <option value="25-34">25–34</option>
+                <option value="35-44">35–44</option>
+                <option value="45-54">45–54</option>
+                <option value="55+">55+</option>
+                <option value="prefer_not" data-i18n="preferNot">Prefer not to say</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label data-i18n="settlement">Where did you mostly grow up?</label>
+            <div class="pills">
+              <label><input type="radio" name="settlement" value="city" /><span data-i18n="setCity">City</span></label>
+              <label><input type="radio" name="settlement" value="town" /><span data-i18n="setTown">Small town</span></label>
+              <label><input type="radio" name="settlement" value="rural" /><span data-i18n="setRural">Village / rural</span></label>
+              <label><input type="radio" name="settlement" value="mixed" /><span data-i18n="setMixed">A mix</span></label>
+            </div>
+          </div>
+          <div class="field">
+            <label data-i18n="gender">Gender</label>
+            <div class="pills">
+              <label><input type="radio" name="gender" value="woman" /><span data-i18n="gWoman">Woman</span></label>
+              <label><input type="radio" name="gender" value="man" /><span data-i18n="gMan">Man</span></label>
+              <label><input type="radio" name="gender" value="self" /><span data-i18n="gSelf">Self-describe</span></label>
+              <label><input type="radio" name="gender" value="prefer_not" /><span data-i18n="preferNot">Prefer not to say</span></label>
+            </div>
+            <p class="hint" data-i18n="genderHint">Many taboos apply differently to women and men, so this helps us read your answers.</p>
+          </div>
+        </fieldset>
+
+        <p class="error" id="profileError" hidden></p>
+        <div class="actions">
+          <button type="button" class="btn btn-ghost" data-go="0" data-i18n="back">Back</button>
+          <button type="submit" class="btn btn-lg" data-i18n="next">Next: your taboos</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ============ STEP 2: TABOOS ============ -->
+    <section class="step" data-step="2" id="step2" hidden>
+      <h1 data-i18n="taboosTitle">Share your taboos</h1>
+      <p class="lede" data-i18n="taboosLede">Write each taboo the way you would explain it to a friend. Use any language, or mix languages. One taboo per entry. There are no wrong answers: small everyday ones are just as valuable as big ones.</p>
+
+      <div class="jogger card card-soft">
+        <div class="jogger-head">
+          <strong data-i18n="joggerTitle">Stuck? Pick an area to jog your memory</strong>
+          <button type="button" class="linkbtn" id="shuffleJogger" data-i18n="shuffle">Show others</button>
+        </div>
+        <div class="chips" id="joggerChips"></div>
+        <p class="jogger-q" id="joggerQ" hidden></p>
+      </div>
+
+      <form id="tabooForm" class="card composer" novalidate>
+        <div class="composer-head">
+          <h2 class="h3" id="composerTitle" data-i18n="newTaboo">New taboo</h2>
+          <span class="saved" id="draftSaved" hidden data-i18n="draftSaved">Draft saved</span>
+        </div>
+
+        <div class="field">
+          <label for="tabooText"><span data-i18n="tabooText">Describe the taboo</span> <b class="req">*</b></label>
+          <textarea id="tabooText" name="text" rows="4" maxlength="1500" data-i18n-ph="tabooPh" placeholder="It is taboo to … / You must never … / Where I come from, people do not …"></textarea>
+          <div class="field-foot">
+            <span class="hint" id="textHint" data-i18n="textHint">Say what must not be done, and if you can, who it applies to.</span>
+            <span class="count" id="textCount">0</span>
+          </div>
+          <div class="nudges" id="nudges"></div>
+        </div>
+
+        <div class="grid2">
+          <div class="field">
+            <label for="textLang"><span data-i18n="textLang">Language you wrote it in</span> <b class="req">*</b></label>
+            <select id="textLang" name="text_language"></select>
+            <input id="textLangOther" type="text" class="mt" hidden data-i18n-ph="specify" placeholder="Please specify" />
+          </div>
+          <div class="field" id="translationField" hidden>
+            <label for="translation" data-i18n="translation">English translation (optional but very helpful)</label>
+            <textarea id="translation" name="translation_en" rows="2" maxlength="1500"></textarea>
+          </div>
+        </div>
+
+        <div class="field">
+          <label><span data-i18n="theme">What is it about?</span> <b class="req">*</b> <span class="hint-inline" data-i18n="themeHint">Pick one or more. The first you pick is the main theme.</span></label>
+          <div class="suggest" id="themeSuggest" hidden><span data-i18n="suggested">Suggested from your text:</span> <span class="chips" id="themeSuggestChips"></span></div>
+          <div class="chips chips-select" id="themeChips"></div>
+          <input id="themeOther" type="text" class="mt" hidden data-i18n-ph="themeOtherPh" placeholder="Describe the theme" />
+        </div>
+
+        <div class="field">
+          <label><span data-i18n="scope">Who holds this taboo?</span> <b class="req">*</b> <span class="hint-inline" data-i18n="scopeHint">Tick all that apply.</span></label>
+          <div class="checkgrid checkgrid-2" id="scopeGrid"></div>
+        </div>
+
+        <div class="field">
+          <label for="belongsTo" data-i18n="belongsTo">Which group or community does it belong to?</label>
+          <input id="belongsTo" name="belongs_to" type="text" list="ethnicList" autocomplete="off" />
+          <p class="hint" data-i18n="belongsHint">Pre-filled from your profile. Change it if this taboo is from another group you know well, or name the religion, region, or country.</p>
+        </div>
+
+        <div class="field">
+          <label><span data-i18n="strength">How serious is breaking it?</span> <b class="req">*</b></label>
+          <div class="pills pills-wrap" id="strengthPills"></div>
+        </div>
+
+        <details class="more" id="moreDetails">
+          <summary data-i18n="moreDetail">Add more detail (optional, helps a lot)</summary>
+          <div class="more-body">
+            <div class="field">
+              <label data-i18n="appliesTo">Who must follow it?</label>
+              <div class="chips chips-select chips-multi" id="appliesChips"></div>
+            </div>
+            <div class="field">
+              <label data-i18n="observed">Is it still observed today?</label>
+              <div class="pills pills-wrap" id="observedPills"></div>
+            </div>
+            <div class="field">
+              <label data-i18n="personal">Do you personally follow it?</label>
+              <div class="pills pills-wrap" id="personalPills"></div>
+            </div>
+            <div class="field">
+              <label for="consequence" data-i18n="consequence">What happens if someone breaks it, or why is it a taboo?</label>
+              <textarea id="consequence" name="consequence" rows="2" maxlength="1000" data-i18n-ph="consequencePh" placeholder="What people believe will happen, how others react, or the reason you were given"></textarea>
+            </div>
+            <div class="field">
+              <label for="context" data-i18n="context">When or where does it apply? Any exceptions?</label>
+              <textarea id="context" name="context" rows="2" maxlength="1000"></textarea>
+            </div>
+            <div class="field">
+              <label data-i18n="learned">How did you learn about it?</label>
+              <div class="chips chips-select chips-multi" id="learnedChips"></div>
+            </div>
+          </div>
+        </details>
+
+        <p class="error" id="tabooError" hidden></p>
+        <div class="actions actions-split">
+          <button type="button" class="btn btn-ghost" id="cancelEdit" hidden data-i18n="cancelEdit">Cancel edit</button>
+          <span class="kbd-hint" data-i18n-html="kbdHint"></span>
+          <button type="submit" class="btn" id="addTaboo" data-i18n="addTaboo">Add this taboo</button>
+        </div>
+      </form>
+
+      <div class="list-head">
+        <h2 class="h3"><span data-i18n="yourList">Your taboos</span> <span class="badge" id="listCount">0</span></h2>
+        <span class="muted" id="listEncourage"></span>
+      </div>
+      <ol class="taboo-list" id="tabooList"></ol>
+      <p class="empty" id="emptyList" data-i18n="emptyList">Taboos you add will appear here. You can edit or remove them before submitting.</p>
+
+      <div class="actions sticky-actions">
+        <button type="button" class="btn btn-ghost" data-go="1" data-i18n="back">Back</button>
+        <button type="button" class="btn btn-lg" id="toReview" data-i18n="toReview">Review & submit</button>
+      </div>
+    </section>
+
+    <!-- ============ STEP 3: REVIEW ============ -->
+    <section class="step" data-step="3" id="step3" hidden>
+      <h1 data-i18n="reviewTitle">Review and submit</h1>
+      <p class="lede" data-i18n="reviewLede">Check everything looks right. You can go back to change anything.</p>
+
+      <div class="card">
+        <div class="review-head"><h2 class="h3" data-i18n="aboutYou">About you</h2><button type="button" class="linkbtn" data-go="1" data-i18n="edit">Edit</button></div>
+        <dl class="review-dl" id="reviewProfile"></dl>
+      </div>
+      <div class="card">
+        <div class="review-head"><h2 class="h3"><span data-i18n="yourList">Your taboos</span> <span class="badge" id="reviewCount"></span></h2><button type="button" class="linkbtn" data-go="2" data-i18n="edit">Edit</button></div>
+        <ol class="taboo-list taboo-list-review" id="reviewList"></ol>
+      </div>
+
+      <div class="card">
+        <label for="feedback" data-i18n="feedback">Anything else you'd like to tell us? (optional)</label>
+        <textarea id="feedback" rows="2" maxlength="1500" data-i18n-ph="feedbackPh" placeholder="Comments on the questions, taboos that were hard to put into words, etc."></textarea>
+        <label class="check check-sm mt"><input type="checkbox" id="phase2Interest" /> <span data-i18n="phase2">I'm happy to take part in Phase 2 (rating other people's taboos). I'll use my participant ID.</span></label>
+      </div>
+
+      <input type="text" id="hp_website" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
+      <p class="error" id="submitError" hidden></p>
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" data-go="2" data-i18n="back">Back</button>
+        <button type="button" class="btn btn-lg" id="submitAll" data-i18n="submit">Submit my taboos</button>
+      </div>
+    </section>
+
+    <!-- ============ STEP 4: DONE ============ -->
+    <section class="step" data-step="4" id="step4" hidden>
+      <div class="done">
+        <div class="done-mark" aria-hidden="true">✓</div>
+        <h1 data-i18n="doneTitle">Thank you!</h1>
+        <p class="lede" id="doneText"></p>
+        <div class="idcard idcard-center">
+          <div>
+            <div class="idcard-label" data-i18n="yourId">Your participant ID</div>
+            <code class="uid uid-lg" id="uidDone"></code>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm" id="copyId2" data-i18n="copy">Copy</button>
+        </div>
+        <p class="muted" data-i18n="doneKeep">Keep this ID for Phase 2, or if you ever want your data removed.</p>
+        <div class="notice" id="doneQueued" hidden data-i18n="doneQueued">We couldn't reach the server, so your answers are saved on this device and will be sent automatically the next time you open this page with an internet connection.</div>
+        <div class="row row-center">
+          <button type="button" class="btn" id="addMore" data-i18n="addMore">Add more taboos</button>
+          <button type="button" class="btn btn-ghost" id="shareBtn" data-i18n="share">Invite someone from another culture</button>
+          <button type="button" class="btn btn-ghost" id="downloadBtn" hidden data-i18n="download">Download a copy (JSON)</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot wrap">
+    <p data-i18n="footer">AfriTaboo · a person-sourced, culture-level taboo benchmark for African contexts.</p>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="config.js"></script>
+  <script src="data.js"></script>
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
