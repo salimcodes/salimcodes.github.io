@@ -266,3 +266,22 @@ details.more summary { color: var(--accent-strong); font-size: 15px; }
 .foot { padding: 30px 16px 40px; color: var(--ink-3); font-size: 13px; text-align: center; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+/* Taboo definition card */
+.define { border-left: 4px solid var(--accent); }
+.define-lead { margin: 0 0 14px; color: var(--ink-2); }
+.define-sub { font: 600 14px var(--sans); margin: 0 0 8px; color: var(--ink); }
+.define-ex { list-style: none; padding: 0; margin: 0 0 16px; display: grid; gap: 8px; }
+.define-ex li { display: flex; gap: 10px; align-items: flex-start; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; font-size: 15px; }
+.define-ex li span { flex: none; width: 22px; text-align: center; }
+.define-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.define-grid > div { border-radius: 10px; padding: 12px 14px; font-size: 14px; }
+.define-grid ul { margin: 6px 0 0; padding-left: 18px; color: var(--ink-2); }
+.define-grid li { margin: 2px 0; }
+.define-yes { background: color-mix(in srgb, var(--ok) 10%, transparent); }
+.define-yes strong { color: var(--ok); }
+.define-no { background: var(--surface-2); border: 1px solid var(--line); }
+.define-no strong { color: var(--ink-2); }
+.define-note { margin: 0; font-size: 14px; color: var(--ink-3); }
+@media (max-width: 560px) { .define-grid { grid-template-columns: 1fr; } }
+.define-ex li p { margin: 0; }

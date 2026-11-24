@@ -1,43 +1,79 @@
 # AfriTaboo: Phase 1 (Elicitation) form
 
-Live at `https://salimoyinlola.com/taboo/` once pushed. It's a static page (no build step), and responses go to a Google Sheet through a small Google Apps Script.
+Live at `https://salimoyinlola.com/taboo/` once pushed. It's a static page with no build step. Responses are stored in a **private GitHub repository** (`salimcodes/AfriTabooBench`) through a small Google Apps Script relay.
+
+```
+participant's browser ──POST──▶ Apps Script (holds the GitHub token) ──commit──▶ private repo AfriTabooBench
+                                                                                   └─ GitHub Action rebuilds exports/*.csv
+```
+
+The data repo is separate on purpose. This website repo is public, so anything committed here can be read by anyone and is served on salimoyinlola.com. Participants' ethnicity and religion must not end up here.
 
 ## Files
 
 | File | Purpose |
 |---|---|
-| `index.html` | The form: consent → about you → taboos → review → thank-you |
+| `index.html` | The form: definition and consent → about you → taboos → review → thank-you |
 | `app.js` | Form logic (validation, autosave, smart suggestions, submission queue) |
 | `data.js` | Countries, ethnic-group and language suggestions, themes, religions |
 | `i18n.js` | All interface text in English and French |
-| `config.js` | **The only file you need to edit**: backend URL, contact email, form version |
-| `backend/Code.gs` | Google Apps Script that writes responses into a Google Sheet |
+| `config.js` | **The only front-end file you need to edit**: backend URL, contact email, form version |
+| `backend/Code.gs` | Apps Script relay: validates each submission and commits it to the private repo |
+| `backend/data-repo/` | Starter files to copy into the private data repo (exports builder and workflow) |
 
-## Connect it to Google Sheets (about 5 minutes)
+## Setup (about 10 minutes)
 
-1. Create a new Google Sheet, for example "AfriTaboo Phase 1 responses".
-2. In the Sheet, go to **Extensions → Apps Script**. Delete the placeholder code, paste in everything from `backend/Code.gs`, and save.
-3. Click **Deploy → New deployment**, choose the type **Web app**, and set:
-   - *Execute as*: **Me**
-   - *Who has access*: **Anyone**
-4. Authorise when prompted. Google will warn that the app is unverified; this is expected for your own script, so click *Advanced → Go to project*.
-5. Copy the **Web app URL** (it ends in `/exec`) and paste it into `config.js`:
-   ```js
-   ENDPOINT: "https://script.google.com/macros/s/XXXX/exec",
-   ```
-6. Optionally set `CONTACT_EMAIL` in `config.js` for withdrawal requests, then commit and push.
+### 1. Private data repo ✅ done
 
-The Sheet gets three tabs on the first submission:
+[`salimcodes/AfriTabooBench`](https://github.com/salimcodes/AfriTabooBench) is private and contains the contents of `backend/data-repo/`: the exports script, the "Build exports" workflow (first run succeeded), and an empty `submissions/` folder. If you change files in `backend/data-repo/`, copy them across to that repo again.
 
-- **taboos**: one row per taboo (long format), with the participant's country, ethnic group, languages and religion copied onto each row so you can filter and pivot directly.
-- **participants**: one row per participant ID, updated if they come back and add more.
-- **submissions**: an audit log with optional feedback and time taken.
+### 2. Create a GitHub token that can only write to that repo
 
-To analyse the data, use *File → Download → CSV* on the `taboos` tab.
+GitHub → **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**:
+- *Repository access*: **Only select repositories** → `AfriTabooBench`
+- *Permissions → Repository → Contents*: **Read and write**. Nothing else is needed.
+- Set an expiry date that runs past the end of data collection.
 
-> If you edit `Code.gs` later, use **Deploy → Manage deployments → Edit → Version: New version**. This keeps the same URL. Creating a *new deployment* instead gives you a new URL.
+Copy the token. You'll only see it once.
 
-Until `ENDPOINT` is set, the page runs in **local test mode**: a banner says so, submissions stay in the browser, and the thank-you screen offers a JSON download.
+### 3. Deploy the relay (Google Apps Script)
+
+1. Go to [script.google.com](https://script.google.com) → **New project**. Paste in everything from `backend/Code.gs` and save.
+2. Open **Project Settings (⚙) → Script properties** and add:
+   | Property | Value |
+   |---|---|
+   | `GITHUB_TOKEN` | the token from step 2 |
+   | `GITHUB_REPO` | `salimcodes/AfriTabooBench` |
+   | `GITHUB_BRANCH` | `main` (optional) |
+   | `MIRROR_TO_SHEET` | `true` (optional, only if you create the script from inside a Google Sheet via *Extensions → Apps Script* and want a live copy there too) |
+3. Back in the editor, select **`testGitHub`** in the function dropdown and click **Run**. Authorise it; Google will warn the app is unverified, so click *Advanced → Go to project*. The log should say `Repo OK … private=true · push=true`.
+4. Click **Deploy → New deployment → Web app**, with *Execute as*: **Me** and *Who has access*: **Anyone**. Copy the URL that ends in `/exec`.
+
+### 4. Connect the form
+
+Paste the URL into `config.js` and push this repo:
+```js
+ENDPOINT: "https://script.google.com/macros/s/XXXX/exec",
+```
+Submit one test response and check that `submissions/AT-…/….json` appears in `AfriTabooBench`, then `exports/` about a minute later.
+
+> If you edit `Code.gs` later, use **Deploy → Manage deployments → Edit → Version: New version** to keep the same URL.
+
+Until `ENDPOINT` is set, the page runs in **local test mode**: submissions stay in the browser and can be downloaded as JSON.
+
+## What lands in the data repo
+
+```
+submissions/<participant-id>/<submission-id>.json   one file per submission, never overwritten
+exports/taboos.csv          one row per taboo, with the participant's country, ethnic group, languages and religion attached
+exports/participants.csv    one row per participant (latest profile, number of taboos)
+exports/submissions.csv     audit log, feedback, time taken, recruiter code
+exports/SUMMARY.md          live counts by country, theme, ethnic group, religion
+```
+
+- **Safe retries.** If a participant's connection drops, the form retries later. The file name is the submission ID, so a retry never creates a duplicate.
+- **Withdrawal.** Delete `submissions/<their ID>/` and push. The exports rebuild without them.
+- **The token is never exposed.** It lives only in Apps Script's Script Properties; the web page only knows the `/exec` URL.
 
 ## Recruitment links
 
@@ -68,7 +104,7 @@ Until `ENDPOINT` is set, the page runs in **local test mode**: a banner says so,
 
 ## Before launch
 
-- [ ] Paste the Apps Script URL into `config.js` and send a test submission.
+- [ ] Create the private `AfriTabooBench` repo, the token and the relay (above), then send a test submission.
 - [ ] Pilot with 3–5 people (Week 1 in the proposal), then bump `FORM_VERSION` if you change any questions.
 - [ ] Confirm the ethics requirements and add a contact email.
-- [ ] Delete the test rows from the Sheet.
+- [ ] Delete the test submission folder(s) from `AfriTabooBench`.

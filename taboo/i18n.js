@@ -14,6 +14,20 @@ window.AFRITABOO_I18N = {
     factAnonV: "Anonymous", factAnon: "no name or email collected",
     factLangV: "Any language", factLang: "or a mix of languages",
     publicCount: "{n} taboos shared so far",
+    defTitle: "What do we mean by a “taboo”?",
+    defLead: "A <strong>taboo</strong> is something people in your community believe <strong>must not be done, said, eaten, touched, or worn</strong>. What enforces it is custom, belief, respect, or religion, not a written law. Breaking it may bring shame, disapproval, bad luck, or spiritual consequences, or it may simply be seen as deeply wrong.",
+    defExTitle: "For example, in many African communities:",
+    defExamples:
+      "<li><span>✋</span><p>Giving or receiving something with the <strong>left hand</strong>.</p></li>" +
+      "<li><span>👵</span><p>Calling an elder by their <strong>first name</strong>, or not greeting them properly.</p></li>" +
+      "<li><span>🌙</span><p><strong>Whistling</strong> or <strong>sweeping the house</strong> at night.</p></li>" +
+      "<li><span>🤰</span><p>A pregnant woman eating <strong>certain foods</strong> or going out at certain times.</p></li>" +
+      "<li><span>⚱️</span><p><strong>Pointing</strong> at a grave, or a widow leaving the house during mourning.</p></li>",
+    defYesTitle: "It counts if…",
+    defYes: "<li>people around you would say “we don't do that”</li><li>it is big or small, serious or everyday</li><li>it is fading, or only some people still follow it</li><li>it belongs to your family, ethnic group, religion, or area</li>",
+    defNoTitle: "It's probably not what we're after if…",
+    defNo: "<li>it is only forbidden by law (e.g. theft)</li><li>it is just a personal preference</li><li>it is general good manners everywhere in the world</li>",
+    defNote: "These examples only show the <em>kind</em> of thing we mean. Please share taboos <strong>you</strong> know from your own culture, in your own words, even if they look like these.",
     welcomeBack: "Welcome back",
     welcomeBackText: "This device remembers you as participant",
     welcomeBackText2: "Your earlier answers about yourself are filled in, so you can go straight to adding more taboos.",
@@ -245,6 +259,20 @@ window.AFRITABOO_I18N = {
     factAnonV: "Anonyme", factAnon: "ni nom ni e-mail demandés",
     factLangV: "Toute langue", factLang: "ou un mélange de langues",
     publicCount: "{n} tabous partagés jusqu'ici",
+    defTitle: "Qu'entend-on par « tabou » ?",
+    defLead: "Un <strong>tabou</strong> est une chose que les gens de votre communauté considèrent comme <strong>à ne pas faire, dire, manger, toucher ou porter</strong>. Ce n'est pas une loi écrite qui l'interdit, mais la coutume, la croyance, le respect ou la religion. L'enfreindre peut entraîner la honte, la désapprobation, le malheur ou des conséquences spirituelles, ou simplement être vu comme profondément mal.",
+    defExTitle: "Par exemple, dans de nombreuses communautés africaines :",
+    defExamples:
+      "<li><span>✋</span><p>Donner ou recevoir quelque chose de la <strong>main gauche</strong>.</p></li>" +
+      "<li><span>👵</span><p>Appeler un aîné par son <strong>prénom</strong>, ou ne pas le saluer correctement.</p></li>" +
+      "<li><span>🌙</span><p><strong>Siffler</strong> ou <strong>balayer la maison</strong> la nuit.</p></li>" +
+      "<li><span>🤰</span><p>Une femme enceinte qui mange <strong>certains aliments</strong> ou sort à certaines heures.</p></li>" +
+      "<li><span>⚱️</span><p><strong>Montrer du doigt</strong> une tombe, ou une veuve qui sort pendant le deuil.</p></li>",
+    defYesTitle: "Ça compte si…",
+    defYes: "<li>les gens autour de vous diraient « ça ne se fait pas »</li><li>c'est grand ou petit, grave ou quotidien</li><li>il se perd, ou seuls certains le respectent encore</li><li>il appartient à votre famille, groupe ethnique, religion ou région</li>",
+    defNoTitle: "Ce n'est probablement pas ce que nous cherchons si…",
+    defNo: "<li>c'est seulement interdit par la loi (ex. le vol)</li><li>c'est une simple préférence personnelle</li><li>c'est une politesse universelle partout dans le monde</li>",
+    defNote: "Ces exemples montrent seulement le <em>type</em> de choses que nous cherchons. Partagez les tabous que <strong>vous</strong> connaissez de votre culture, avec vos mots, même s'ils ressemblent à ceux-ci.",
     welcomeBack: "Bon retour",
     welcomeBackText: "Cet appareil vous reconnaît comme participant·e",
     welcomeBackText2: "Vos réponses précédentes sur vous-même sont pré-remplies : vous pouvez passer directement à l'ajout de tabous.",
