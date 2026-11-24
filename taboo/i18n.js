@@ -78,7 +78,7 @@ window.AFRITABOO_I18N = {
     settlement: "Where did you mostly grow up?",
     setCity: "City", setTown: "Small town", setRural: "Village / rural", setMixed: "A mix",
     gender: "Gender",
-    gWoman: "Woman", gMan: "Man", gSelf: "Self-describe",
+    gWoman: "Woman", gMan: "Man", gSelf: "Another identity",
     genderHint: "Many taboos apply differently to women and men, so this helps us read your answers.",
     back: "Back",
     next: "Next: your taboos",
