@@ -7,7 +7,7 @@
  *           downloaded as JSON, nothing is sent anywhere.
  */
 window.AFRITABOO_CONFIG = {
-  ENDPOINT: "",
+  ENDPOINT: "https://script.google.com/macros/s/AKfycbxm6VntiogWBRUg3Xfz_T44ZgSlnVmnszCuO-qJ-8ninJJlqRdWrMk9PvzhGHTB0Mv-/exec",
 
   // Shown on the consent screen. Leave empty to hide the contact line.
   CONTACT_EMAIL: "",
