@@ -29,6 +29,7 @@
       <div class="lang" role="group" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="fr" aria-pressed="false">FR</button>
+        <button type="button" data-lang="ar" aria-pressed="false" lang="ar" title="العربية">عربي</button>
       </div>
     </div>
     <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
@@ -81,7 +82,7 @@
 
       <div id="returning" class="card card-soft" hidden>
         <h2 class="h3" data-i18n="welcomeBack">Welcome back</h2>
-        <p><span data-i18n="welcomeBackText">This device remembers you as participant</span> <code class="uid" id="returningId"></code>. <span data-i18n="welcomeBackText2">Your earlier answers about yourself are filled in; you can go straight to adding more taboos.</span></p>
+        <p><span data-i18n="welcomeBackText">This device remembers you as participant</span> <code dir="ltr" class="uid" id="returningId"></code>. <span data-i18n="welcomeBackText2">Your earlier answers about yourself are filled in; you can go straight to adding more taboos.</span></p>
         <div class="row">
           <button type="button" class="btn" id="continueReturning" data-i18n="continueAs">Continue with this ID</button>
           <button type="button" class="btn btn-ghost" id="startFresh" data-i18n="notMe">I'm someone else</button>
@@ -105,7 +106,7 @@
           <summary data-i18n="haveId">I already have a participant ID</summary>
           <div class="field">
             <label for="existingId" data-i18n="haveIdLabel">Enter your ID (e.g. AT-7K3M-Q9)</label>
-            <input id="existingId" type="text" autocomplete="off" spellcheck="false" placeholder="AT-XXXX-XX" />
+            <input dir="ltr" id="existingId" type="text" autocomplete="off" spellcheck="false" placeholder="AT-XXXX-XX" />
           </div>
         </details>
         <p class="error" id="consentError" hidden data-i18n="consentError">Please tick all four boxes to continue.</p>
@@ -123,7 +124,7 @@
       <div class="idcard">
         <div>
           <div class="idcard-label" data-i18n="yourId">Your participant ID</div>
-          <code class="uid uid-lg" id="uidDisplay"></code>
+          <code dir="ltr" class="uid uid-lg" id="uidDisplay"></code>
         </div>
         <button type="button" class="btn btn-ghost btn-sm" id="copyId" data-i18n="copy">Copy</button>
         <p class="idcard-note" data-i18n="idNote">Save this. It links your answers in this phase to the next phase, and lets you withdraw your data later. It is not connected to your name.</p>
@@ -137,13 +138,13 @@
             <label for="country"><span data-i18n="country">Which country's culture do you most identify with?</span> <b class="req">*</b></label>
             <select id="country" name="country" required></select>
             <p class="hint" data-i18n="countryHint">The country whose customs you grew up with, even if you live elsewhere now.</p>
-            <input id="countryOther" name="country_other" type="text" class="mt" hidden data-i18n-ph="countryOtherPh" placeholder="Please specify" />
+            <input dir="auto" id="countryOther" name="country_other" type="text" class="mt" hidden data-i18n-ph="countryOtherPh" placeholder="Please specify" />
           </div>
 
           <div class="field">
             <label for="residence" data-i18n="residence">Where do you live now?</label>
             <select id="residence" name="residence"></select>
-            <input id="residenceOther" name="residence_other" type="text" class="mt" hidden data-i18n-ph="residenceOtherPh" placeholder="Country" />
+            <input dir="auto" id="residenceOther" name="residence_other" type="text" class="mt" hidden data-i18n-ph="residenceOtherPh" placeholder="Country" />
           </div>
 
           <div class="field">
@@ -160,7 +161,7 @@
             <label for="ethnicInput"><span data-i18n="ethnic">Ethnic group(s)</span> <b class="req">*</b></label>
             <div class="tags" id="ethnicTags" data-name="ethnic_groups">
               <div class="tag-list"></div>
-              <input id="ethnicInput" type="text" list="ethnicList" autocomplete="off" data-i18n-ph="ethnicPh" placeholder="Start typing, press Enter to add" />
+              <input dir="auto" id="ethnicInput" type="text" list="ethnicList" autocomplete="off" data-i18n-ph="ethnicPh" placeholder="Start typing, press Enter to add" />
               <datalist id="ethnicList"></datalist>
             </div>
             <p class="hint" data-i18n="ethnicHint">Add more than one if you have mixed heritage. You can be specific (e.g. a sub-group or clan) or general.</p>
@@ -171,7 +172,7 @@
             <label for="langInput"><span data-i18n="languages">Language(s) you speak</span> <b class="req">*</b></label>
             <div class="tags" id="langTags" data-name="languages">
               <div class="tag-list"></div>
-              <input id="langInput" type="text" list="langList" autocomplete="off" data-i18n-ph="langPh" placeholder="Start typing, press Enter to add" />
+              <input dir="auto" id="langInput" type="text" list="langList" autocomplete="off" data-i18n-ph="langPh" placeholder="Start typing, press Enter to add" />
               <datalist id="langList"></datalist>
             </div>
             <p class="hint" data-i18n="langHint">Put your first language (mother tongue) first. Drag isn't needed: click a language to make it first.</p>
@@ -183,7 +184,7 @@
           <div class="field">
             <label><span data-i18n="religion">Religion(s) you practise or identify with</span> <b class="req">*</b></label>
             <div class="checkgrid" id="religionGrid"></div>
-            <input id="religionDetail" name="religion_detail" type="text" class="mt" data-i18n-ph="religionDetailPh" placeholder="Optional: denomination, order, or tradition" />
+            <input dir="auto" id="religionDetail" name="religion_detail" type="text" class="mt" data-i18n-ph="religionDetailPh" placeholder="Optional: denomination, order, or tradition" />
           </div>
           <div class="field">
             <label for="religionRaised" data-i18n="religionRaised">Religion you were raised in, if different</label>
@@ -196,7 +197,7 @@
           <div class="grid2">
             <div class="field">
               <label for="region" data-i18n="region">Region, state, or town you grew up in</label>
-              <input id="region" name="region" type="text" autocomplete="off" data-i18n-ph="regionPh" placeholder="e.g. a state, province, or town" />
+              <input dir="auto" id="region" name="region" type="text" autocomplete="off" data-i18n-ph="regionPh" placeholder="e.g. a state, province, or town" />
             </div>
             <div class="field">
               <label for="ageBand" data-i18n="age">Age</label>
@@ -262,7 +263,7 @@
 
         <div class="field">
           <label for="tabooText"><span data-i18n="tabooText">Describe the taboo</span> <b class="req">*</b></label>
-          <textarea id="tabooText" name="text" rows="4" maxlength="1500" data-i18n-ph="tabooPh" placeholder="It is taboo to … / You must never … / Where I come from, people do not …"></textarea>
+          <textarea dir="auto" id="tabooText" name="text" rows="4" maxlength="1500" data-i18n-ph="tabooPh" placeholder="It is taboo to … / You must never … / Where I come from, people do not …"></textarea>
           <div class="field-foot">
             <span class="hint" id="textHint" data-i18n="textHint">Say what must not be done, and if you can, who it applies to.</span>
             <span class="count" id="textCount">0</span>
@@ -274,11 +275,11 @@
           <div class="field">
             <label for="textLang"><span data-i18n="textLang">Language you wrote it in</span> <b class="req">*</b></label>
             <select id="textLang" name="text_language"></select>
-            <input id="textLangOther" type="text" class="mt" hidden data-i18n-ph="specify" placeholder="Please specify" />
+            <input dir="auto" id="textLangOther" type="text" class="mt" hidden data-i18n-ph="specify" placeholder="Please specify" />
           </div>
           <div class="field" id="translationField" hidden>
             <label for="translation" data-i18n="translation">English translation (optional but very helpful)</label>
-            <textarea id="translation" name="translation_en" rows="2" maxlength="1500"></textarea>
+            <textarea dir="auto" id="translation" name="translation_en" rows="2" maxlength="1500"></textarea>
           </div>
         </div>
 
@@ -286,7 +287,7 @@
           <label><span data-i18n="theme">What is it about?</span> <b class="req">*</b> <span class="hint-inline" data-i18n="themeHint">Pick one or more. The first you pick is the main theme.</span></label>
           <div class="suggest" id="themeSuggest" hidden><span data-i18n="suggested">Suggested from your text:</span> <span class="chips" id="themeSuggestChips"></span></div>
           <div class="chips chips-select" id="themeChips"></div>
-          <input id="themeOther" type="text" class="mt" hidden data-i18n-ph="themeOtherPh" placeholder="Describe the theme" />
+          <input dir="auto" id="themeOther" type="text" class="mt" hidden data-i18n-ph="themeOtherPh" placeholder="Describe the theme" />
         </div>
 
         <div class="field">
@@ -296,7 +297,7 @@
 
         <div class="field">
           <label for="belongsTo" data-i18n="belongsTo">Which group or community does it belong to?</label>
-          <input id="belongsTo" name="belongs_to" type="text" list="ethnicList" autocomplete="off" />
+          <input dir="auto" id="belongsTo" name="belongs_to" type="text" list="ethnicList" autocomplete="off" />
           <p class="hint" data-i18n="belongsHint">Pre-filled from your profile. Change it if this taboo is from another group you know well, or name the religion, region, or country.</p>
         </div>
 
@@ -322,11 +323,11 @@
             </div>
             <div class="field">
               <label for="consequence" data-i18n="consequence">What happens if someone breaks it, or why is it a taboo?</label>
-              <textarea id="consequence" name="consequence" rows="2" maxlength="1000" data-i18n-ph="consequencePh" placeholder="What people believe will happen, how others react, or the reason you were given"></textarea>
+              <textarea dir="auto" id="consequence" name="consequence" rows="2" maxlength="1000" data-i18n-ph="consequencePh" placeholder="What people believe will happen, how others react, or the reason you were given"></textarea>
             </div>
             <div class="field">
               <label for="context" data-i18n="context">When or where does it apply? Any exceptions?</label>
-              <textarea id="context" name="context" rows="2" maxlength="1000"></textarea>
+              <textarea dir="auto" id="context" name="context" rows="2" maxlength="1000"></textarea>
             </div>
             <div class="field">
               <label data-i18n="learned">How did you learn about it?</label>
@@ -372,7 +373,7 @@
 
       <div class="card">
         <label for="feedback" data-i18n="feedback">Anything else you'd like to tell us? (optional)</label>
-        <textarea id="feedback" rows="2" maxlength="1500" data-i18n-ph="feedbackPh" placeholder="Comments on the questions, taboos that were hard to put into words, etc."></textarea>
+        <textarea dir="auto" id="feedback" rows="2" maxlength="1500" data-i18n-ph="feedbackPh" placeholder="Comments on the questions, taboos that were hard to put into words, etc."></textarea>
         <label class="check check-sm mt"><input type="checkbox" id="phase2Interest" /> <span data-i18n="phase2">I'm happy to take part in Phase 2 (rating other people's taboos). I'll use my participant ID.</span></label>
       </div>
 
@@ -393,7 +394,7 @@
         <div class="idcard idcard-center">
           <div>
             <div class="idcard-label" data-i18n="yourId">Your participant ID</div>
-            <code class="uid uid-lg" id="uidDone"></code>
+            <code dir="ltr" class="uid uid-lg" id="uidDone"></code>
           </div>
           <button type="button" class="btn btn-ghost btn-sm" id="copyId2" data-i18n="copy">Copy</button>
         </div>
@@ -417,6 +418,7 @@
   <script src="config.js"></script>
   <script src="data.js"></script>
   <script src="i18n.js"></script>
+  <script src="i18n-ar.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

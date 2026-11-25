@@ -17,6 +17,7 @@ The data repo is separate on purpose. This website repo is public, so anything c
 | `app.js` | Form logic (validation, autosave, smart suggestions, submission queue) |
 | `data.js` | Countries, ethnic-group and language suggestions, themes, religions |
 | `i18n.js` | All interface text in English and French |
+| `i18n-ar.js` | All interface text in Arabic (the page switches to right-to-left) |
 | `config.js` | **The only front-end file you need to edit**: backend URL, contact email, form version |
 | `backend/Code.gs` | Apps Script relay: validates each submission and commits it to the private repo |
 | `backend/data-repo/` | Starter files to copy into the private data repo (exports builder and workflow) |
@@ -78,7 +79,7 @@ exports/SUMMARY.md          live counts by country, theme, ethnic group, religio
 ## Recruitment links
 
 - `?ref=CODE` tags every submission with a recruiter or channel code, e.g. `/taboo/?ref=ke-salim` or `/taboo/?ref=whatsapp-ug`. Use it to track which recruiter or country channel is working (the "agree roles and who recruits from which countries" open item).
-- `?lang=fr` opens the form in French. Otherwise the page follows the browser language, and people can switch at any time.
+- `?lang=fr` opens the form in French and `?lang=ar` in Arabic (right-to-left). Otherwise the page follows the browser language, and people can switch at any time.
 - `?uid=AT-XXXX-XX` pre-fills a participant ID, for example to send someone their own link for Phase 2.
 
 ## What the form collects
@@ -87,7 +88,7 @@ exports/SUMMARY.md          live counts by country, theme, ethnic group, religio
 
 **Each taboo:**
 
-- Required: the text in their own words, the language they wrote it in (detected automatically for English and French, otherwise chosen by them), theme(s), who holds the taboo (family, ethnic group, religion, local area, country, several countries…), and how serious breaking it is.
+- Required: the text in their own words, the language they wrote it in (detected automatically for English, French and Arabic, otherwise chosen by them), theme(s), who holds the taboo (family, ethnic group, religion, local area, country, several countries…), and how serious breaking it is.
 - Optional: an English translation, which group or community it belongs to, who must follow it, whether it is still observed, whether they follow it themselves, what happens if it's broken or why it exists, when it applies, and how they learned it.
 
 **Metadata:** time spent per taboo, whether the entry was edited, recruiter code, UI language, device type, and the form version.
@@ -95,7 +96,7 @@ exports/SUMMARY.md          live counts by country, theme, ethnic group, religio
 ## Smart features and the research reasons for them
 
 - **Memory joggers.** Each theme has a prompt question but no example taboo, so we don't prime specific answers. Themes the person hasn't covered yet are shown first.
-- **Theme suggestions** come from keywords in the text (English and French). Any theme accepted from a suggestion is logged in `themes_from_suggestion`, so you can check whether the suggestions influenced the labels.
+- **Theme suggestions** come from keywords in the text (English, French and Arabic). Any theme accepted from a suggestion is logged in `themes_from_suggestion`, so you can check whether the suggestions influenced the labels.
 - **Writing nudges:** a warning if the text contains a phone number or email, a hint when one entry seems to hold several taboos (each needs to be rated on its own in Phase 2), a near-duplicate warning against their earlier entries, and a prompt to state clearly what must *not* be done.
 - **Group pre-fill.** "Belongs to" is filled from the profile but can be changed, so people can report taboos of neighbouring groups they know well. Together with *scope*, this feeds RQ2 (country vs ethnic group vs religion).
 - **Autosave and offline safety.** Drafts are saved on the device. If a submission fails it is queued and retried automatically, and each submission has an ID so retries never create duplicate rows.
@@ -107,4 +108,5 @@ exports/SUMMARY.md          live counts by country, theme, ethnic group, religio
 - [ ] Create the private `AfriTabooBench` repo, the token and the relay (above), then send a test submission.
 - [ ] Pilot with 3–5 people (Week 1 in the proposal), then bump `FORM_VERSION` if you change any questions.
 - [ ] Confirm the ethics requirements and add a contact email.
+- [ ] Have native speakers review the French (`i18n.js`) and Arabic (`i18n-ar.js`, `THEMES_AR` in `data.js`) text.
 - [ ] Delete the test submission folder(s) from `AfriTabooBench`.

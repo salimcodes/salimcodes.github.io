@@ -285,3 +285,25 @@ details.more summary { color: var(--accent-strong); font-size: 15px; }
 .define-note { margin: 0; font-size: 14px; color: var(--ink-3); }
 @media (max-width: 560px) { .define-grid { grid-template-columns: 1fr; } }
 .define-ex li p { margin: 0; }
+
+/* ---------- Arabic / right-to-left ---------- */
+:lang(ar) { --serif: "Noto Naskh Arabic", "Amiri", "Traditional Arabic", "Times New Roman", serif; --sans: "Noto Sans Arabic", "Segoe UI", Tahoma, "Geeza Pro", Roboto, sans-serif; }
+/* Letter-spacing breaks the joins between Arabic letters, and Arabic has no upper case. */
+:lang(ar) * { letter-spacing: 0 !important; }
+:lang(ar) legend, :lang(ar) .chip small, :lang(ar) .tag-main small { text-transform: none; font-size: 12px; }
+:lang(ar) .jogger-q { font-style: normal; }
+:lang(ar) body, :lang(ar) .lede { line-height: 1.75; }
+.lang button:lang(ar) { font-family: "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif; font-size: 13px; padding-block: 4px; }
+[dir="rtl"] select { background-position: 13px 55%, 18px 55%; padding-right: 12px; padding-left: 34px; }
+[dir="rtl"] .chip small { margin-left: 0; margin-right: 4px; }
+[dir="rtl"] .tag-main small { margin-left: 0; margin-right: 2px; }
+[dir="rtl"] .actions-split #cancelEdit { margin-right: 0; margin-left: auto; }
+[dir="rtl"] .jogger-q { border-left: 0; padding-left: 0; border-right: 3px solid var(--accent); padding-right: 12px; }
+[dir="rtl"] .define { border-left: 0; border-right: 4px solid var(--accent); }
+[dir="rtl"] .define-grid ul { padding-left: 0; padding-right: 18px; }
+[dir="rtl"] .notice { text-align: right; }
+[dir="rtl"] .uid, [dir="rtl"] code, [dir="rtl"] kbd { unicode-bidi: isolate; }
+/* Visually hidden without off-screen offsets: a far-left offset creates sideways scroll in RTL. */
+.skip, .hp { left: 0; top: 0; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.skip:focus { left: 16px; top: 8px; width: auto; height: auto; overflow: visible; clip-path: none; }
+[dir="rtl"] .skip:focus { left: auto; right: 16px; }

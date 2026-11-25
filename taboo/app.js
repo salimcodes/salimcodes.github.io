@@ -95,6 +95,7 @@
 
   function applyI18n() {
     document.documentElement.lang = LANG;
+    document.documentElement.dir = LANG === "ar" ? "rtl" : "ltr";
     $$("[data-i18n]").forEach((el) => (el.textContent = t(el.dataset.i18n)));
     $$("[data-i18n-html]").forEach((el) => (el.innerHTML = t(el.dataset.i18nHtml)));
     $$("[data-i18n-ph]").forEach((el) => (el.placeholder = t(el.dataset.i18nPh)));
@@ -388,7 +389,7 @@
     const seen = new Set(); const out = [];
     const push = (v) => { const k = v.toLowerCase(); if (!seen.has(k)) { seen.add(k); out.push({ v, l: v }); } };
     (S.profile.languages || []).forEach(push);
-    push("English"); push("French");
+    push("English"); push("French"); push("Arabic");
     return [{ v: "", l: t("selectPh") }, ...out, { v: "__mixed", l: t("codeSwitched") }, { v: "__other", l: t("otherLang") }];
   }
 
@@ -464,15 +465,25 @@
 
   /* --- smart helpers: theme suggestion, language guess, nudges --- */
   const SUFX = ["", "s", "es", "d", "ed", "ing", "en", "er", "ers", "ting", "ning", "ness", "e"];
-  const norm = (s) => " " + String(s).toLowerCase().normalize("NFC").replace(/[^\p{L}\p{N}'\- ]+/gu, " ").replace(/\s+/g, " ").trim() + " ";
+  const AR_RE = /[؀-ۿ]/;
+  // Arabic: drop diacritics and tatweel, unify alef/ya/ta-marbuta spellings, so "الأكْل" ~ "الاكل".
+  const arNorm = (s) => s.replace(/[ً-ٰٟـ]/g, "").replace(/[أإآٱ]/g, "ا").replace(/ى/g, "ي").replace(/ة/g, "ه");
+  const norm = (s) => " " + arNorm(String(s).toLowerCase().normalize("NFC")).replace(/[^\p{L}\p{N}'\- ]+/gu, " ").replace(/\s+/g, " ").trim() + " ";
+  // Arabic attaches و/ف and ال/ب/ل/ك to the front of words: try the word with and without them.
+  const arStems = (w) => { const out = new Set([w]); const a = w.replace(/^[وف]/, ""); out.add(a); out.add(a.replace(/^(بال|كال|لل|ال|ب|ل|ك)/, "")); return [...out].filter((x) => x.length >= 2); };
+  const AR_SUFX = ["", "ه", "ات", "ين", "ون", "ي", "ها", "هم", "ان"];
   function scoreThemes(text) {
     const padded = norm(text); const words = padded.trim().split(" ").filter(Boolean);
     const scores = [];
     for (const th of DATA.THEMES) {
       let sc = 0;
       for (let k of th.kw) {
-        k = k.trim().toLowerCase(); if (!k) continue;
+        k = arNorm(k.trim().toLowerCase()); if (!k) continue;
         if (/[\s-]/.test(k)) { if (padded.includes(" " + k)) sc += 2; continue; }
+        if (AR_RE.test(k)) {
+          for (const w of words) if (arStems(w).some((x) => k.length <= 3 ? AR_SUFX.some((s) => x === k + s) : x.startsWith(k))) sc++;
+          continue;
+        }
         for (const w of words) {
           if (k.length <= 4 ? SUFX.some((s) => w === k + s) : w.startsWith(k)) sc++;
         }
@@ -493,6 +504,12 @@
   const STOP_EN = new Set("the and is are to of you your it not must never do don't doesn't a an in for be should when someone people they their with on if or at by from this that".split(" "));
   const STOP_FR = new Set("le la les et est sont de des du un une pas ne il elle on jamais doit faut pour dans que qui quand au aux se ce cette nous vous leur ou en avec sur".split(" "));
   function guessLanguage(text) {
+    const letters = String(text).replace(/[^\p{L}]/gu, "");
+    if (letters.length >= 12) {
+      const ar = (letters.match(/[؀-ۿ]/g) || []).length / letters.length;
+      if (ar > 0.85) return "Arabic";
+      if (ar > 0.15) return ""; // Arabic mixed with another language: let the person choose
+    }
     const words = norm(text).trim().split(" ").filter(Boolean);
     if (words.length < 4) return null;
     let en = 0, fr = 0;
@@ -530,12 +547,14 @@
     return na + nb ? (2 * inter) / (na + nb) : 0;
   }
   function updateNudges() {
-    const d = S.draft, txt = d.text.trim(), out = [];
+    const d = S.draft, out = [];
+    // Arabic-Indic digits (٠-٩, ۰-۹) count as digits for the phone-number check.
+    const txt = d.text.trim().replace(/[٠-٩۰-۹]/g, (c) => String(c.charCodeAt(0) & 0xF));
     if (txt) {
       const phoneLike = (txt.match(/\+?\d[\d\s().-]{7,}\d/g) || []).some((m) => m.replace(/\D/g, "").length >= 9);
       if (/[\w.+-]+@[\w-]+\.[\w.]+/.test(txt) || phoneLike) out.push(["warn", t("nudgePII")]);
       const listLines = txt.split(/\n/).filter((l) => /^\s*(\d+[.)]|[-•*])\s+/.test(l)).length;
-      if (listLines >= 2 || /\b(secondly|another one is|also,? (it is|you|we)|deuxièmement|autre tabou)\b/i.test(txt)) out.push(["info", t("nudgeMulti")]);
+      if (listLines >= 2 || /\b(secondly|another one is|also,? (it is|you|we)|deuxièmement|autre tabou)\b/i.test(txt) || /(ثانيا|محظور اخر|من المحظورات ايضا)/.test(arNorm(txt))) out.push(["info", t("nudgeMulti")]);
       let best = 0, bestIdx = -1;
       S.taboos.forEach((x, i) => { if (x.id === S.editingId) return; const s = similarity(txt, x.text); if (s > best) { best = s; bestIdx = i; } });
       if (best >= 0.6 && txt.length > 15) out.push(["info", t("nudgeDup", { n: bestIdx + 1 })]);
@@ -559,7 +578,7 @@
     renderChips($("#joggerChips"), slice.map((x) => x.id), themeLabel, joggerActive ? [joggerActive] : [], { cls: "chip-jog" });
     const q = $("#joggerQ");
     const th = DATA.THEMES.find((x) => x.id === joggerActive);
-    q.hidden = !th; if (th) q.textContent = LANG === "fr" ? th.pfr : th.pen;
+    q.hidden = !th; if (th) q.textContent = th["p" + LANG] || th.pen;
   }
   $("#shuffleJogger").addEventListener("click", () => { joggerOffset += window.innerWidth < 560 ? 5 : 8; joggerActive = null; renderJogger(); });
   $("#joggerChips").addEventListener("click", (e) => {
