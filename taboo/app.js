@@ -222,7 +222,6 @@
     const p = S.profile;
     const cs = DATA.COUNTRIES.map((c) => ({ v: c.name, l: c.name }));
     fillSelect($("#country"), [{ v: "", l: t("selectPh") }, ...cs, { v: "__other", l: t("countryOtherOpt") }], p.country || "");
-    fillSelect($("#residence"), [{ v: "__same", l: t("sameCountry") }, ...cs, { v: "__outside", l: t("outsideAfrica") }], p.residence || "__same");
     const rel = DATA.RELIGIONS.filter((r) => r.id !== "prefer_not").map((r) => ({ v: r.id, l: r[LANG] || r.en }));
     fillSelect($("#religionRaised"), [{ v: "", l: t("sameAsAbove") }, ...rel], p.religion_raised || "");
     $("#religionGrid").innerHTML = DATA.RELIGIONS.map((r) =>
@@ -238,7 +237,6 @@
     const langs = [...new Set([...(c ? c.languages : []), ...DATA.COMMON_LANGUAGES, ...DATA.COUNTRIES.flatMap((x) => x.languages)])];
     $("#langList").innerHTML = langs.map((x) => `<option value="${esc(x)}">`).join("");
     $("#countryOther").hidden = $("#country").value !== "__other";
-    $("#residenceOther").hidden = $("#residence").value !== "__outside";
   }
 
   /* Tag input component */
@@ -299,7 +297,6 @@
     $("#uidDisplay").textContent = S.uid || "";
     renderProfileSelects();
     $("#countryOther").value = p.country_other || "";
-    $("#residenceOther").value = p.residence_other || "";
     $("#ethnicPreferNot").checked = !!p.ethnic_prefer_not;
     $("#religionDetail").value = p.religion_detail || "";
     $("#region").value = p.region || "";
@@ -315,8 +312,6 @@
     const p = S.profile, f = $("#profileForm");
     p.country = $("#country").value;
     p.country_other = p.country === "__other" ? $("#countryOther").value.trim() : "";
-    p.residence = $("#residence").value;
-    p.residence_other = p.residence === "__outside" ? $("#residenceOther").value.trim() : "";
     p.ethnic_prefer_not = $("#ethnicPreferNot").checked;
     p.religions = $$('input[name="religion"]:checked', f).map((x) => x.value);
     p.religion_detail = $("#religionDetail").value.trim();
@@ -337,7 +332,7 @@
       if (tgt.checked && excl.includes(tgt.value)) boxes.forEach((b) => { if (b !== tgt) b.checked = false; });
       else if (tgt.checked) boxes.forEach((b) => { if (excl.includes(b.value)) b.checked = false; });
     }
-    if (tgt.id === "country" || tgt.id === "residence") updateCountryDependent();
+    if (tgt.id === "country") updateCountryDependent();
     if (tgt.id === "ethnicPreferNot") { S.profile.ethnic_prefer_not = tgt.checked; ethnicTags.render(); }
     collectProfile(); save();
   });
@@ -756,16 +751,10 @@
   const SETTLE = { city: "setCity", town: "setTown", rural: "setRural", mixed: "setMixed" };
   const GENDER = { woman: "gWoman", man: "gMan", self: "gSelf", prefer_not: "preferNot" };
 
-  function residenceDisplay(p = S.profile) {
-    if (!p.residence || p.residence === "__same") return countryDisplay(p);
-    if (p.residence === "__outside") return p.residence_other || t("outsideAfrica");
-    return p.residence;
-  }
   function renderReview() {
     const p = S.profile, ng = t("notGiven");
     const rows = [
       ["rvCountry", countryDisplay()],
-      ["rvResidence", residenceDisplay()],
       ["rvYears", p.years_in_country ? t(YEARS[p.years_in_country]) : ""],
       ["rvEthnic", p.ethnic_prefer_not ? t("preferNot") : (p.ethnic_groups || []).join(", ")],
       ["rvLang", (p.languages || []).join(", ")],
@@ -801,8 +790,9 @@
       participant: {
         country: p.country === "__other" ? "Other" : p.country,
         country_other: p.country_other || "",
-        residence: p.residence === "__same" || !p.residence ? countryDisplay() : p.residence === "__outside" ? "Outside Africa" : p.residence,
-        residence_other: p.residence_other || "",
+        // "Where do you live now?" was removed in p1-2026.11.25; keys kept empty so the record schema and CSV columns stay stable.
+        residence: "",
+        residence_other: "",
         years_in_country: p.years_in_country || "",
         ethnic_groups: p.ethnic_prefer_not ? [] : (p.ethnic_groups || []),
         ethnic_prefer_not: !!p.ethnic_prefer_not,

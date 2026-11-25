@@ -84,7 +84,7 @@ exports/SUMMARY.md          live counts by country, theme, ethnic group, religio
 
 ## What the form collects
 
-**Participant (asked once and remembered on the device):** a participant ID (generated automatically, e.g. `AT-7K3M-Q9`, with a check character so typos are caught), the country they identify with culturally, where they live now, how long they lived in that country (to spot diaspora), ethnic group(s) (several allowed, or "prefer not to say"), languages with their first language marked, religion(s) plus the religion they were raised in, and optionally region, age band, urban or rural upbringing, and gender.
+**Participant (asked once and remembered on the device):** a participant ID (generated automatically, e.g. `AT-7K3M-Q9`, with a check character so typos are caught), the country they identify with culturally, how long they lived in that country (to spot diaspora), ethnic group(s) (several allowed, or "prefer not to say"), languages with their first language marked, religion(s) plus the religion they were raised in, and optionally region, age band, urban or rural upbringing, and gender.
 
 **Each taboo:**
 

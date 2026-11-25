@@ -13,7 +13,7 @@ window.AFRITABOO_CONFIG = {
   CONTACT_EMAIL: "",
 
   // Bump when you change questions, so rows can be traced to a form version.
-  FORM_VERSION: "p1-2026.11.24",
+  FORM_VERSION: "p1-2026.11.25", // .25: removed "Where do you live now?"
 
   // Soft targets used for gentle encouragement in the UI.
   SUGGESTED_MIN_TABOOS: 3,
